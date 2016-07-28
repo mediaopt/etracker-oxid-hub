@@ -10,7 +10,7 @@ $aModule = [
     ],
     'lang' => 'en',
     'thumbnail' => 'logo.png',
-    'version' => '1.0.0 ##revision##',
+    'version' => '3.0.0 ##revision##',
     'author' => 'derksen mediaopt GmbH',
     'url' => 'https://www.mediaopt.de',
     'email' => 'support@mediaopt.de',
