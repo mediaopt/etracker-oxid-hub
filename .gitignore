@@ -1,0 +1,8 @@
+.idea
+build/*
+!build/.gitkeep
+generic-bundler
+bundles/*
+!bundles/.gitkeep
+*~
+skeleton
