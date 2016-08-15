@@ -6,3 +6,4 @@ bundles/*
 !bundles/.gitkeep
 *~
 skeleton
+mergedProject.json
