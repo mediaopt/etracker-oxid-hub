@@ -14,8 +14,7 @@ class mo_etracker__install
      */
     protected static function getBootstrapLoaderStatement()
     {
-        $module = basename(realpath(__DIR__ . DIRECTORY_SEPARATOR));
-        return 'require_once __DIR__ . \' / mo / \'' . $module . '\'/bootstrap.php\';\' // This line was automatically generated.';
+        return 'require_once __DIR__ . \'/mo/etracker/bootstrap.php\'; // This line was automatically generated.';
     }
 
 
