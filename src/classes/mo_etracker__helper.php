@@ -5,6 +5,8 @@
  */
 class mo_etracker__helper
 {
+    const EVENT_QUEUE = 'mo_etracker__eventQueue';
+
     /**
      * prepend path
      *
@@ -96,7 +98,7 @@ class mo_etracker__helper
     {
         $isAlreadyEscaped = ['et_basket'];
         foreach ($etrackerVars as $key => $value) {
-            if(in_array($key, $isAlreadyEscaped)) {
+            if (in_array($key, $isAlreadyEscaped)) {
                 continue;
             }
             $etrackerVars[$key] = rawurlencode($value);
@@ -160,4 +162,29 @@ class mo_etracker__helper
         }
         return $etBasket;
     }
+
+    /**
+     * Returns the triggered events and removes them.
+     *
+     * @see mo_etracker__helper::$events
+     * @return mo_etracker__event[]
+     */
+    public function takeEvents()
+    {
+        $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
+        \oxRegistry::getSession()->setVariable(self::EVENT_QUEUE, []);
+        return is_array($eventQueue) ? $eventQueue : [];
+    }
+
+    /**
+     * @param mo_etracker__event $event
+     * @return $this
+     */
+    public function trigger(mo_etracker__event $event)
+    {
+        $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
+        \oxRegistry::getSession()->setVariable(self::EVENT_QUEUE, is_array($eventQueue) ? array_merge([$event], $eventQueue) : [$event]);
+        return $this;
+    }
+
 }

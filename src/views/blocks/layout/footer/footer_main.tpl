@@ -8,7 +8,7 @@
         etCommerce.debugMode = true;
         [{/if}]
         var etCommercePrepareEvents = [];
-        [{$oViewConf->mo_etracker__getEvents()}].forEach(function(event) {
+        [{$oViewConf->mo_etracker__getEventCalls()}].forEach(function(event) {
             etCommercePrepareEvents.push(event);
         });
     </script>

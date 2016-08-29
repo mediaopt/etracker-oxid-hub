@@ -72,7 +72,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     public function mo_etracker__getConfiguration()
     {
         $etrackerConfig = [];
-        foreach(['moetsecurecode', 'moetsecurekey', 'moetsechannel', 'moetroot', 'moetdebug'] as $configurationKey) {
+        foreach (['moetsecurecode', 'moetsecurekey', 'moetsechannel', 'moetroot', 'moetdebug'] as $configurationKey) {
             $etrackerConfig[$configurationKey] = \oxRegistry::getConfig()->getConfigParam($configurationKey);
         }
         return $etrackerConfig;
@@ -104,7 +104,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     protected function moetGetPagename()
     {
         $myConfig = $this->getConfig();
-        /*@var $helper mo_etracker__helper */
+        /* @var $helper mo_etracker__helper */
         $helper = mo_etracker__main::getInstance()->getHelper();
         $pagename = '';
 
@@ -145,7 +145,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function moetHandlePagename($uri)
     {
-        /*@var $helper mo_etracker__helper */
+        /* @var $helper mo_etracker__helper */
         $helper = mo_etracker__main::getInstance()->getHelper();
         $myConfig = $this->getConfig();
 
@@ -173,7 +173,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function moetGetAreas()
     {
-        /*@var $helper mo_etracker__helper */
+        /* @var $helper mo_etracker__helper */
         $helper = mo_etracker__main::getInstance()->getHelper();
         $areas = '';
 
@@ -500,21 +500,14 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         return get_class($myConfig->getActiveView()) == 'oxUBase';
     }
 
-    public function mo_etracker__getEvents()
+    public function mo_etracker__getEventCalls()
     {
-        /* @TODO: Check UTF-8 */
-
-        $product = new stdClass();
-        $product->id = '3445';
-        $product->name = 'Elfrieda';
-        $product->category = ['Tiere', 'Großwild', 'Giraffen', 'Liebe Giraffen'];
-        $product->price = '1723.60';
-        $product->currency = 'EUR';
-        $product->variants = new stdClass();
-        $product->variants->Farbe = 'gelb';
-        $product->variants->Geschlecht = 'weiblich';
-        $product->variants->Figure = 'dünn';
-        return json_encode([['sendEvent', 'viewProduct', $product, 'Warenkorb 1']]);
+        /* TODO: Check UTF-8 */
+        $calls = [];
+        foreach (\oxRegistry::get('mo_etracker__helper')->takeEvents() as $event) {
+            $calls[] = array_merge(['sendEvent', $event->getEventName()], $event->getParameters());
+        }
+        return json_encode($calls);
     }
 
 }
