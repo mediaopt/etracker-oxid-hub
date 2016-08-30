@@ -15,22 +15,22 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
         $itemId = empty($oldBasketItemId)
             ? $this->getItemKey($productId, $selection, $persistentParameters, $bundle)
             : $oldBasketItemId;
-        $previousAmount = isset($this->_aBasketContents[$itemId]) ? $this->_aBasketContents[$itemId]->getAmount() : 0;
+        $previousBasketItem = isset($this->_aBasketContents[$itemId]) ? $this->_aBasketContents[$itemId] : null;
+        $previousAmount = is_null($previousBasketItem) ? 0 : $previousBasketItem->getAmount();
 
         /** @var oxBasketItem $basketItem */
         $basketItem = parent::addToBasket($productId, $amount, $selection, $persistentParameters, $override, $bundle,
             $oldBasketItemId);
 
-        $event = $this->generateEvent($basketItem, $basketItem->getAmount() - $previousAmount);
+        assert(!is_null($basketItem) || !is_null($previousBasketItem));
+
+        $pertainedBasketItem = is_null($basketItem) ? $previousBasketItem : $basketItem;
+        $currentAmount = is_null($basketItem) ? 0 : $basketItem->getAmount();
+        $event = $this->generateEvent($pertainedBasketItem, $currentAmount - $previousAmount);
         if(!is_null($event)) {
             \oxRegistry::get('mo_etracker__helper')->trigger($event);
         }
         return $basketItem;
-    }
-
-    public function removeItem($itemKey)
-    {
-        parent::removeItem($itemKey);
     }
 
     /**
