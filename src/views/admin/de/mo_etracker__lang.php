@@ -4,6 +4,11 @@ $sLangName = 'Deutsch';
 $aLang = [
     'charset' => 'ISO-8859-1',
 
+    'tbclcategory_etracker' => 'etracker',
+    'MO_ETRACKER__CATEGORY' => 'etracker-Kategorie',
+    'MO_ETRACKER__CATEGORY_HELP' => 'Dieser Bezeichner wird statt des Kategorienamens an etracker übermittelt.',
+    'MO_ETRACKER__SAVE' => 'Speichern',
+
     //labels and help-content for admin-area
     'SHOP_MODULE_GROUP_mo_etracker__config' => 'etracker Konfiguration',
     'SHOP_MODULE_moetsecurecode' => 'Sicherheitscode',

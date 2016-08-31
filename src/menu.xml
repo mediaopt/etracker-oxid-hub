@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-15" ?>
+<OX>
+    <OXMENU id="NAVIGATION_ESHOPADMIN">
+        <MAINMENU id="mxcatgegories">
+            <SUBMENU id="mxdisplaycategories" cl="category" list="category_list">
+                <TAB id="tbclcategory_etracker" cl="mo_etracker__category"/>
+            </SUBMENU>
+        </MAINMENU>
+    </OXMENU>
+</OX>

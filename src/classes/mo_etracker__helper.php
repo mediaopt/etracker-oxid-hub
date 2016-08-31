@@ -8,6 +8,13 @@ class mo_etracker__helper
     const EVENT_QUEUE = 'mo_etracker__eventQueue';
 
     /**
+     * True iff events were queued.
+     *
+     * @var bool
+     */
+    protected $eventsQueued = false;
+
+    /**
      * prepend path
      *
      * @param string pagename
@@ -173,7 +180,16 @@ class mo_etracker__helper
     {
         $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
         \oxRegistry::getSession()->setVariable(self::EVENT_QUEUE, []);
+        if(!empty($eventQueue)) {
+            $this->eventsQueued = true;
+        }
         return is_array($eventQueue) ? $eventQueue : [];
+    }
+
+    public function hasEvents()
+    {
+        $this->eventsQueued |= !empty(\oxRegistry::getSession()->getVariable(self::EVENT_QUEUE));
+        return $this->eventsQueued;
     }
 
     /**
@@ -183,7 +199,8 @@ class mo_etracker__helper
     public function trigger(mo_etracker__event $event)
     {
         $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
-        \oxRegistry::getSession()->setVariable(self::EVENT_QUEUE, is_array($eventQueue) ? array_merge([$event], $eventQueue) : [$event]);
+        $updatedEventQueue = is_array($eventQueue) ? array_merge($eventQueue, [$event]) : [$event];
+        \oxRegistry::getSession()->setVariable(self::EVENT_QUEUE, $updatedEventQueue);
         return $this;
     }
 

@@ -36,7 +36,6 @@
         //var et_se = "";
         //var et_tag = "";
     </script>
-    <script id="_etLoader" type="text/javascript" charset="UTF-8" data-secure-code="[{$mo_etracker__config.moetsecurecode}]" src="//static.etracker.com/code/e.js"></script>
-    <noscript><link rel="stylesheet" media="all" href="//www.etracker.de/cnt_css.php?et=[{$mo_etracker__config.moetsecurecode}]&amp;v=4.0&amp;java=n&amp;et_easy=0[{$noscriptParameters}]" /></noscript>
+    [{include file="mo_etracker__etracker_include"}]
     <!-- etracker tracklet 4.0 end -->
 [{/if}]

@@ -8,17 +8,25 @@
  */
 class mo_etracker__main
 {
+    /**
+     * @var self
+     */
     static protected $instance = null;
+
+    /**
+     * @var mo_etracker__helper
+     */
+    protected $helper;
 
     /**
      * singleton accessor
      *
-     * @return type
+     * @return self
      */
     static public function getInstance()
     {
         if (is_null(self::$instance)) {
-            self::$instance = new mo_etracker__main();
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -26,9 +34,9 @@ class mo_etracker__main
     /**
      * mock instance for unit-tests
      *
-     * @param type $mock
+     * @param mo_etracker__main $mock
      */
-    static public function unitTestSetMockInstance($mock)
+    static public function unitTestSetMockInstance(mo_etracker__main $mock)
     {
         self::$instance = $mock;
     }

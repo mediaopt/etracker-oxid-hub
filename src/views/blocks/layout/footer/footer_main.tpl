@@ -1,19 +1,8 @@
 [{$smarty.block.parent}]
 
+[{include file="mo_etracker__eventhandler"}]
+
 [{assign var=mo_etracker__config value=$oViewConf->mo_etracker__getConfiguration()}]
-
-[{if $oViewConf->moetIsConfigComplete()}]
-    <script type="text/javascript">
-        [{if $mo_etracker__config.moetdebug}]
-        etCommerce.debugMode = true;
-        [{/if}]
-        var etCommercePrepareEvents = [];
-        [{$oViewConf->mo_etracker__getEventCalls()}].forEach(function(event) {
-            etCommercePrepareEvents.push(event);
-        });
-    </script>
-[{/if}]
-
 [{assign var=mo_etracker__user value=$oView->getUser()}]
 [{if $mo_etracker__config.moetdebug && $mo_etracker__user && $mo_etracker__user->inGroup('oxidadmin')}]
     <style>

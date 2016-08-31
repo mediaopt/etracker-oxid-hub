@@ -3,6 +3,11 @@
 class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
 {
 
+    /**
+     * @var string
+     */
+    protected $mo_etracker__basketId = '';
+
     public function addToBasket(
         $productId,
         $amount,
@@ -26,8 +31,8 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
 
         $pertainedBasketItem = is_null($basketItem) ? $previousBasketItem : $basketItem;
         $currentAmount = is_null($basketItem) ? 0 : $basketItem->getAmount();
-        $event = $this->generateEvent($pertainedBasketItem, $currentAmount - $previousAmount);
-        if(!is_null($event)) {
+        $event = $this->mo_etracker__generateEvent($pertainedBasketItem, $currentAmount - $previousAmount);
+        if (!is_null($event)) {
             \oxRegistry::get('mo_etracker__helper')->trigger($event);
         }
         return $basketItem;
@@ -38,18 +43,25 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
      * @param int $amountDelta
      * @return mo_etracker__basketFilledEvent
      */
-    protected function generateEvent($basketItem, $amountDelta)
+    protected function mo_etracker__generateEvent($basketItem, $amountDelta)
     {
-        // TODO: How to find out a basket id? (session id?!)
         // TODO: When to set a page name?
-
-        if($amountDelta > 0) {
-            return new mo_etracker__basketFilledEvent($basketItem->getArticle(), $amountDelta);
+        $basketId = $this->mo_etracker__getBasketId();
+        if ($amountDelta > 0) {
+            return new mo_etracker__basketFilledEvent($basketItem->getArticle(), $amountDelta, $basketId);
         }
-        if($amountDelta < 0) {
-            return new mo_etracker__basketEmptiedEvent($basketItem->getArticle(), -$amountDelta);
+        if ($amountDelta < 0) {
+            return new mo_etracker__basketEmptiedEvent($basketItem->getArticle(), -$amountDelta, $basketId);
         }
 
         return null;
+    }
+
+    public function mo_etracker__getBasketId()
+    {
+        if(empty($this->mo_etracker__basketId)) {
+            $this->mo_etracker__basketId = md5(uniqid());
+        }
+        return $this->mo_etracker__basketId;
     }
 }

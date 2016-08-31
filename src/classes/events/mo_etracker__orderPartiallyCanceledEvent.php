@@ -4,7 +4,7 @@
  *
  * @author derksen mediaopt GmbH
  */
-class mo_etracker__orderCanceledEvent implements mo_etracker__event
+class mo_etracker__orderPartiallyCanceledEvent implements mo_etracker__event
 {
 
     /**
@@ -17,6 +17,12 @@ class mo_etracker__orderCanceledEvent implements mo_etracker__event
      * @var array
      */
     protected $cancelledProducts = [];
+
+    public function __construct(\oxOrder $order, \oxOrderArticle $orderArticle)
+    {
+        $this->orderNumber = $order->oxorder__oxordernr->value;
+        $this->cancelledProducts = [\oxRegistry::get('mo_etracker__converter')->fromBasketItem($orderArticle)];
+    }
 
     /**
      * @return string

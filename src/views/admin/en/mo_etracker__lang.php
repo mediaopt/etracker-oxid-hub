@@ -5,6 +5,8 @@ $sLangName = 'English';
 $aLang = [
     'charset' => 'ISO-8859-1',
 
+    'tbclcategory_etracker' => 'etracker',
+
     // Labels and help content for backend
     'SHOP_MODULE_GROUP_mo_etracker__config' => 'etracker Configuration',
     'SHOP_MODULE_moetsecurecode' => 'Securitycode',

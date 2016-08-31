@@ -98,6 +98,7 @@ class mo_etracker__install
         }
 
         static::addBootstrapLoader();
+        static::addColumn('oxcategories', 'mo_etracker__name', 'VARCHAR(50) NOT NULL DEFAULT ""');
         \oxNew('oxDbMetaDataHandler')->updateViews();
         static::cleanUp();
         return true;

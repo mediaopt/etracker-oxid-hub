@@ -29,10 +29,12 @@ class mo_etracker__productViewedEvent implements mo_etracker__event
 
     /**
      * @param oxArticle $article
+     * @param string $basketId
      */
-    public function __construct(\oxArticle $article)
+    public function __construct(\oxArticle $article, $basketId = '')
     {
         $this->product = \oxRegistry::get('mo_etracker__converter')->fromProduct($article);
+        $this->basketId = $basketId;
     }
 
     /**

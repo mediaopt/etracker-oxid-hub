@@ -18,9 +18,10 @@ $aModule = [
     'email' => 'support@mediaopt.de',
     'extend' => [
         'oxorder' => 'mo/etracker/core/mo_etracker__oxorder',
+        'oxbasket' => 'mo/etracker/core/mo_etracker__oxbasket',
         'oxviewconfig' => 'mo/etracker/core/mo_etracker__oxviewconfig',
         'details' => 'mo/etracker/controllers/mo_etracker__details',
-        'oxbasket' => 'mo/etracker/core/mo_etracker__oxbasket',
+        'order_article' => 'mo/etracker/controllers/admin/mo_etracker__order_article',
     ],
     'files' => [
         'mo_etracker__main' => 'mo/etracker/classes/mo_etracker__main.php',
@@ -35,7 +36,8 @@ $aModule = [
         'mo_etracker__orderCompletedEvent' => 'mo/etracker/classes/events/mo_etracker__orderCompletedEvent.php',
         'mo_etracker__orderConfirmedEvent' => 'mo/etracker/classes/events/mo_etracker__orderConfirmedEvent.php',
         'mo_etracker__orderPartiallyCanceledEvent' => 'mo/etracker/classes/events/mo_etracker__orderPartiallyCanceledEvent.php',
-        'mo_etracker__productViewedEvent' => 'mo/etracker/classes/events/mo_etracker__productViewedEvent.php'
+        'mo_etracker__productViewedEvent' => 'mo/etracker/classes/events/mo_etracker__productViewedEvent.php',
+        'mo_etracker__category' => 'mo/etracker/controllers/admin/mo_etracker__category.php',
     ],
     'blocks' => [
         [
@@ -48,6 +50,11 @@ $aModule = [
             'block' => 'head_css',
             'file' => 'views/blocks/layout/base/head_css.tpl'
         ],
+        [
+            'template' => 'headitem.tpl',
+            'block' => 'admin_headitem_js',
+            'file' => 'views/admin/blocks/admin_headitem_js.tpl'
+        ],
     ],
     'settings' => [
         ['group' => 'mo_etracker__config', 'name' => 'moetsecurecode', 'type' => 'str', 'value' => ''],
@@ -56,7 +63,11 @@ $aModule = [
         ['group' => 'mo_etracker__config', 'name' => 'moetroot', 'type' => 'str', 'value' => ''],
         ['group' => 'mo_etracker__config', 'name' => 'moetdebug', 'type' => 'bool', 'value' => false],
     ],
-    'templates' => [],
+    'templates' => [
+        'mo_etracker__eventhandler' => 'mo/etracker/views/tpl/eventhandler.tpl',
+        'mo_etracker__etracker_include' => 'mo/etracker/views/tpl/etracker_include.tpl',
+        'mo_etracker__category' => 'mo/etracker/views/admin/tpl/category.tpl',
+    ],
     'events' => [
         'onActivate' => 'mo_etracker__install::onActivate',
         'onDeactivate' => 'mo_etracker__install::onDeactivate',

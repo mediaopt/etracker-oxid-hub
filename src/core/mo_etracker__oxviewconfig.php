@@ -45,7 +45,9 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
 
         $etrackerVars['et_se'] = oxRegistry::getConfig()->getConfigParam('moetsechannel');
 
-        if (is_a($this->moetView, 'Thankyou')) {
+//        if (is_a($this->moetView, 'Thankyou')) {
+        // TODO: This is likely to be deleted.
+        if(false) {
             $this->order = $this->moetView->getOrder();
             $this->basket = $this->moetView->getBasket();
 
@@ -61,7 +63,11 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         //no escaping here
         $etrackerVars['et_tag'] = 'language=' . $this->moetGetLanguageAbbr();
 
-        return $this->etrackerVars = $etrackerVars;
+        if ($helper->hasEvents()) {
+            $etrackerVars['cc_pagename'] = $etrackerVars['et_pagename'];
+        }
+        $this->etrackerVars = $etrackerVars;
+        return $this->etrackerVars;
     }
 
     /**
@@ -498,6 +504,11 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     {
         $myConfig = $this->getConfig();
         return get_class($myConfig->getActiveView()) == 'oxUBase';
+    }
+
+    public function mo_etracker__areEventsQueued()
+    {
+        return \oxRegistry::get('mo_etracker__helper')->hasEvents();
     }
 
     public function mo_etracker__getEventCalls()
