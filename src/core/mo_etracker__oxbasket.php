@@ -1,5 +1,20 @@
 <?php
+/**
+ * For the full copyright and license information, refer to the accompanying LICENSE file.
+ *
+ * @copyright 2016 derksen mediaopt GmbH
+ */
 
+/**
+ * This class issues an event whenever an item has been added to or removed from the basket.
+ *
+ * Additionally, it sets a unique id, which will be transmitted to etracker.
+ *
+ * @author Andre Moelle <andre.moelle@mediaopt.de>
+ * @version ${VERSION}, ${REVISION}
+ * @package Mediaopt\Etracker
+ * @extend oxBasket
+ */
 class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
 {
 
@@ -8,6 +23,19 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
      */
     protected $mo_etracker__basketId = '';
 
+    /**
+     *
+     *
+     * @extend
+     * @param string $productId
+     * @param float $amount
+     * @param null $selection
+     * @param null $persistentParameters
+     * @param bool $override
+     * @param bool $bundle
+     * @param null $oldBasketItemId
+     * @return oxBasketItem
+     */
     public function addToBasket(
         $productId,
         $amount,
@@ -33,7 +61,7 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
         $currentAmount = is_null($basketItem) ? 0 : $basketItem->getAmount();
         $event = $this->mo_etracker__generateEvent($pertainedBasketItem, $currentAmount - $previousAmount);
         if (!is_null($event)) {
-            \oxRegistry::get('mo_etracker__helper')->trigger($event);
+            \oxRegistry::get('mo_etracker__main')->trigger($event);
         }
         return $basketItem;
     }
@@ -57,9 +85,14 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
         return null;
     }
 
+    /**
+     * If this basket has not a basket id, we generate one, set it and return it.
+     *
+     * @return string
+     */
     public function mo_etracker__getBasketId()
     {
-        if(empty($this->mo_etracker__basketId)) {
+        if (empty($this->mo_etracker__basketId)) {
             $this->mo_etracker__basketId = md5(uniqid());
         }
         return $this->mo_etracker__basketId;

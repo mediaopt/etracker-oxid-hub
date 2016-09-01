@@ -1,8 +1,16 @@
 <?php
+/**
+ * For the full copyright and license information, refer to the accompanying LICENSE file.
+ *
+ * @copyright 2016 derksen mediaopt GmbH
+ */
 
 /**
+ * This event is issued if an item has been added to the basket.
  *
- * @author derksen mediaopt GmbH
+ * @author Andre Moelle <andre.moelle@mediaopt.de>
+ * @version ${VERSION}, ${REVISION}
+ * @package Mediaopt\Etracker\Event
  */
 class mo_etracker__basketFilledEvent extends mo_etracker__basketEvent implements mo_etracker__event
 {

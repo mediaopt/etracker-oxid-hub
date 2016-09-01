@@ -1,8 +1,16 @@
 <?php
+/**
+ * For the full copyright and license information, refer to the accompanying LICENSE file.
+ *
+ * @copyright 2016 derksen mediaopt GmbH
+ */
 
 /**
+ * This controller enables to set a category name specifically to be used with etracker.
  *
- * @author derksen mediaopt GmbH
+ * @author Andre Moelle <andre.moelle@mediaopt.de>
+ * @version ${VERSION}, ${REVISION}
+ * @package Mediaopt\Etracker
  */
 class mo_etracker__category extends \oxAdminDetails
 {
@@ -14,6 +22,7 @@ class mo_etracker__category extends \oxAdminDetails
     public function render()
     {
         parent::render();
+        $this->addTplParam('mo_etracker__include', true);
         return 'mo_etracker__category.tpl';
     }
 

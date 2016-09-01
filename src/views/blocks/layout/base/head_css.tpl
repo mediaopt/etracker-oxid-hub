@@ -1,25 +1,24 @@
 [{$smarty.block.parent}]
 
-[{assign var=moetrackerVars value=$oViewConf->moetGetEtrackerVars()}]
-[{assign var=noscriptParameters value=$oViewConf->moetGetNoscriptVars($moetrackerVars)}]
+[{assign var=mo_etracker__vars value=$oViewConf->mo_etracker__getVars()}]
 [{assign var=mo_etracker__config value=$oViewConf->mo_etracker__getConfiguration()}]
 
-[{capture name="moetracker"}]
-    [{foreach from=$moetrackerVars key=varName item=value}]
+[{capture name="mo_etracker"}]
+    [{foreach from=$mo_etracker__vars key=varName item=value}]
         var [{$varName}] = '[{$value}]';
     [{/foreach}]
 
     var cc_attributes = new Object();
-    cc_attributes["language"] = ["[{$oViewConf->moetGetLanguageAbbr()}]", false];
+    cc_attributes["language"] = ["[{$oViewConf->mo_etracker__getLanguageAbbr()}]", false];
 [{/capture}]
 
-[{if $oViewConf->moetIsConfigComplete()}]
+[{if $oViewConf->mo_etracker__isConfigComplete()}]
     <!-- Copyright (c) 2000-2016 etracker GmbH. All rights reserved. -->
     <!-- This material may not be reproduced, displayed, modified or distributed -->
     <!-- without the express prior written permission of the copyright holder. -->
     <!-- etracker tracklet 4.0 -->
     <script type="text/javascript">
-        [{$smarty.capture.moetracker}]
+        [{$smarty.capture.mo_etracker}]
         //var et_pagename = "";
         //var et_areas = "";
         //var et_url = "";

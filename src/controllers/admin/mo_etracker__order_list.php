@@ -6,21 +6,23 @@
  */
 
 /**
- * This event is issued if an item is removed from the basket.
+ * This controller allows to cancel an order.
  *
  * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class mo_etracker__basketEmptiedEvent extends mo_etracker__basketEvent implements mo_etracker__event
+class mo_etracker__order_list extends mo_etracker__order_list_parent
 {
 
     /**
-     * @return string
+     * @extend
+     * @return mixed
      */
-    public function getEventName()
+    public function render()
     {
-        return 'removeFromBasket';
+        $this->addTplParam('mo_etracker__include', true);
+        return parent::render();
     }
 
 }

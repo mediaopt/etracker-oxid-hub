@@ -1,15 +1,23 @@
 <?php
+/**
+ * For the full copyright and license information, refer to the accompanying LICENSE file.
+ *
+ * @copyright 2016 derksen mediaopt GmbH
+ */
 
 /**
+ * This class provides functionality to convert OXID artifacts into the corresponding etracker artifacts.
  *
- * TODO: Be consistent w.r.t. article/product
- *
- * @author derksen mediaopt GmbH
+ * @author Andre Moelle <andre.moelle@mediaopt.de>
+ * @version ${VERSION}, ${REVISION}
+ * @package Mediaopt\Etracker
  */
 class mo_etracker__converter
 {
 
     /**
+     * Since the etracker API does not accept empty properties, we have to remove them.
+     *
      * @param object $object
      */
     private function removeEmptyProperties($object)
@@ -22,6 +30,13 @@ class mo_etracker__converter
     }
 
     /**
+     * Returns a list of category labels associated with the given article.
+     *
+     * If any of the categories has a non-empty etracker category name, only etracker category names will be used.
+     * Otherwise, the category names are used.
+     *
+     * If more than four categories are available, only the last four will be returned.
+     *
      * @param oxArticle $article
      * @return string[]
      */
@@ -40,6 +55,8 @@ class mo_etracker__converter
     }
 
     /**
+     * Returns variant information about an article.
+     *
      * @param oxArticle $product
      * @return stdClass
      */
@@ -62,98 +79,112 @@ class mo_etracker__converter
     }
 
     /**
-     * @param oxArticle $product
+     * @param oxArticle $article
      * @param stdClass $etrackerProduct
      */
-    protected function enrichProductWithManufacturer(\oxArticle $product, stdClass $etrackerProduct)
+    protected function enrichProductWithManufacturer(\oxArticle $article, stdClass $etrackerProduct)
     {
         /** @var oxManufacturer $manufacturer */
-        $manufacturer = $product->getManufacturer();
+        $manufacturer = $article->getManufacturer();
         if (!is_null($manufacturer)) {
             $etrackerProduct->pro_name = $manufacturer->getTitle();
         }
     }
 
     /**
-     * @param oxArticle $product
+     * @param oxArticle $article
      * @param stdClass $etrackerProduct
      */
-    protected function enrichProductWithEAN(\oxArticle $product, stdClass $etrackerProduct)
+    protected function enrichProductWithEAN(\oxArticle $article, stdClass $etrackerProduct)
     {
-        if (!empty($product->oxarticles__oxean->value)) {
-            $etrackerProduct->ean = $product->oxarticles__oxean->value;
+        if (!empty($article->oxarticles__oxean->value)) {
+            $etrackerProduct->ean = $article->oxarticles__oxean->value;
         }
     }
 
     /**
-     * @param \oxArticle $product
+     * @param \oxArticle $article
      * @param stdClass $etrackerProduct
      */
-    protected function enrichProduct(\oxArticle $product, stdClass $etrackerProduct)
+    protected function enrichProduct(\oxArticle $article, stdClass $etrackerProduct)
     {
-        $this->enrichProductWithManufacturer($product, $etrackerProduct);
-        $this->enrichProductWithEAN($product, $etrackerProduct);
+        $this->enrichProductWithManufacturer($article, $etrackerProduct);
+        $this->enrichProductWithEAN($article, $etrackerProduct);
     }
 
     /**
-     * @param \oxArticle|\oxOrderArticle $product
+     * Determines the product id to be used for a product.
+     *
+     * @param \oxArticle|\oxOrderArticle $article
      * @return string
      */
-    protected function determineProductId($product)
+    protected function determineProductId($article)
     {
-        if (!empty($product->oxarticles__oxartnum->value)) {
-            return $product->oxarticles__oxartnum->value;
+        if (!empty($article->oxarticles__oxartnum->value)) {
+            return $article->oxarticles__oxartnum->value;
         }
-        return $product->getProductId();
+        return $article->getProductId();
     }
 
     /**
-     * @param \oxArticle|\oxOrderArticle $product
+     * Returns a product containing the information about the supplied article.
+     *
+     * @param \oxArticle|\oxOrderArticle $article
      * @return stdClass
      */
-    public function fromProduct($product)
+    public function fromArticle($article)
     {
-        if ($product instanceof oxOrderArticle) {
-            $article = \oxNew('oxArticle');
-            $article->load($product->oxorderarticles__oxartid->value);
-            return $this->fromProduct($article);
+        if ($article instanceof oxOrderArticle) {
+            $actualArticle = \oxNew('oxArticle');
+            $actualArticle->load($article->oxorderarticles__oxartid->value);
+            return $this->fromArticle($actualArticle);
         }
 
         $etrackerProduct = new stdClass();
-        $etrackerProduct->id = $this->determineProductId($product);
-        $etrackerProduct->name = $product->oxarticles__oxtitle->value;
-        $etrackerProduct->category = $this->getCategories($product);
-        $etrackerProduct->price = (string)$product->getPrice()->getPrice(); // TODO: gross/net price?
+        $etrackerProduct->id = $this->determineProductId($article);
+        $etrackerProduct->name = $article->oxarticles__oxtitle->value;
+        $etrackerProduct->category = $this->getCategories($article);
+        $etrackerProduct->price = (string)$article->getPrice()->getPrice(); // TODO: gross/net price?
         $etrackerProduct->currency = \oxRegistry::getConfig()->getActShopCurrencyObject()->name;
-        $etrackerProduct->variants = $this->getVariant($product);
-        $this->enrichProduct($product, $etrackerProduct);
+        $etrackerProduct->variants = $this->getVariant($article);
+        $this->enrichProduct($article, $etrackerProduct);
         return $etrackerProduct;
     }
 
     /**
+     * Returns a basket item containing the information of the supploed basket item.
+     *
      * @param \oxBasketItem $basketItem
      * @return stdClass
      */
     public function fromBasketItem(\oxBasketItem $basketItem)
     {
         $etrackerBasketItem = new stdClass();
-        $etrackerBasketItem->product = $this->fromProduct($basketItem->getArticle());
+        $etrackerBasketItem->product = $this->fromArticle($basketItem->getArticle());
         $etrackerBasketItem->quantity = $basketItem->getAmount();
         return $etrackerBasketItem;
     }
 
     /**
+     * Returns a basket item containing the information of the supplied order article.
+     *
      * @param oxOrderArticle $orderArticle
      * @return stdClass
      */
     public function fromOrderArticle(\oxOrderArticle $orderArticle)
     {
         $etrackerBasketItem = new stdClass();
-        $etrackerBasketItem->product = $this->fromProduct($orderArticle);
+        $etrackerBasketItem->product = $this->fromArticle($orderArticle);
         $etrackerBasketItem->quantity = (int)$orderArticle->oxorderarticles__oxamount->value;
         return $etrackerBasketItem;
     }
 
+    /**
+     * Returns a basket item containing the information about the supplied wrapping.
+     *
+     * @param oxWrapping $wrapping
+     * @return stdClass
+     */
     protected function fromWrapping(\oxWrapping $wrapping)
     {
         $etrackerBasketItem = new stdClass();
@@ -169,6 +200,12 @@ class mo_etracker__converter
         return $etrackerBasketItem;
     }
 
+    /**
+     * Returns the vouchers (as basket item) used in the supplied basket.
+     *
+     * @param mo_etracker__oxbasket $basket
+     * @return stdClass[]
+     */
     protected function getVouchers(\mo_etracker__oxbasket $basket)
     {
         $products = [];
@@ -189,6 +226,12 @@ class mo_etracker__converter
         return $products;
     }
 
+    /**
+     * Returns the discounts (as basket item) of the supplied basket.
+     *
+     * @param mo_etracker__oxbasket $basket
+     * @return stdClass[]
+     */
     protected function getDiscountsFromBasket(\mo_etracker__oxbasket $basket)
     {
         $products = [];
@@ -207,6 +250,13 @@ class mo_etracker__converter
         return $products;
     }
 
+    /**
+     * Returns the discounts (as basket item) of the supplied basket item.
+     *
+     * @param mo_etracker__oxbasket $basket
+     * @param oxBasketItem $basketItem
+     * @return stdClass[]
+     */
     protected function getDiscountsFromBasketItem(\mo_etracker__oxbasket $basket, \oxBasketItem $basketItem)
     {
         $initialPrice = $basketItem->getArticle()->getPrice();
@@ -234,7 +284,13 @@ class mo_etracker__converter
         return $products;
     }
 
-    protected function getProducts(\mo_etracker__oxbasket $basket)
+    /**
+     * Returns the items of a basket.
+     *
+     * @param mo_etracker__oxbasket $basket
+     * @return stdClass[]
+     */
+    protected function getBasketItems(\mo_etracker__oxbasket $basket)
     {
         $products = [];
         foreach ($basket->getContents() as $basketItem) {
@@ -265,7 +321,7 @@ class mo_etracker__converter
     {
         $etrackerBasket = new stdClass();
         $etrackerBasket->id = $basket->mo_etracker__getBasketId();
-        $etrackerBasket->products = $this->getProducts($basket);
+        $etrackerBasket->products = $this->getBasketItems($basket);
         return $etrackerBasket;
     }
 
@@ -390,8 +446,11 @@ class mo_etracker__converter
      * @param mo_etracker__oxbasket $basket
      * @param stdClass $etrackerOrder
      */
-    protected function enrichOrderWithOptionalInformation(\oxOrder $order, \mo_etracker__oxbasket $basket, stdClass $etrackerOrder)
-    {
+    protected function enrichOrderWithOptionalInformation(
+        \oxOrder $order,
+        \mo_etracker__oxbasket $basket,
+        stdClass $etrackerOrder
+    ) {
         $etrackerOrder->customerId = $order->getOrderUser()->getId();
         $etrackerOrder->customerGroup = $this->getCustomerGroup($order->getOrderUser());
         $etrackerOrder->customerAddress = implode(',', $this->getCustomerInformation($order));

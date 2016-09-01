@@ -6,9 +6,9 @@ $aModule = [
     'title' => 'mediaopt etracker Webcontrolling',
     'description' => [
         'de' => '<p>Erweitern Sie Ihren Shop um etracker Webcontrolling.</p>'
-            . '<p><a href="##handbook-url##" target="_blank">Handbuch</a></p>',
+            . '<p><a href="https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation" target="_blank">Handbuch</a></p>',
         'en' => '<p>Add etracker features to your OXID shop.</p>'
-            . '<p><a href="##handbook-url##" target="_blank">Handbook</a></p>',
+            . '<p><a href="https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation" target="_blank">Handbook</a></p>',
     ],
     'lang' => 'en',
     'thumbnail' => 'logo.png',
@@ -21,12 +21,12 @@ $aModule = [
         'oxbasket' => 'mo/etracker/core/mo_etracker__oxbasket',
         'oxviewconfig' => 'mo/etracker/core/mo_etracker__oxviewconfig',
         'details' => 'mo/etracker/controllers/mo_etracker__details',
+        'order_list' => 'mo/etracker/controllers/admin/mo_etracker__order_list',
         'order_article' => 'mo/etracker/controllers/admin/mo_etracker__order_article',
     ],
     'files' => [
         'mo_etracker__main' => 'mo/etracker/classes/mo_etracker__main.php',
         'mo_etracker__install' => 'mo/etracker/classes/mo_etracker__install.php',
-        'mo_etracker__helper' => 'mo/etracker/classes/mo_etracker__helper.php',
         'mo_etracker__converter' => 'mo/etracker/classes/mo_etracker__converter.php',
         'mo_etracker__event' => 'mo/etracker/classes/mo_etracker__event.php',
         'mo_etracker__basketEvent' => 'mo/etracker/classes/events/mo_etracker__basketEvent.php',
@@ -57,11 +57,11 @@ $aModule = [
         ],
     ],
     'settings' => [
-        ['group' => 'mo_etracker__config', 'name' => 'moetsecurecode', 'type' => 'str', 'value' => ''],
-        ['group' => 'mo_etracker__config', 'name' => 'moetsecurekey', 'type' => 'str', 'value' => ''],
-        ['group' => 'mo_etracker__config', 'name' => 'moetsechannel', 'type' => 'str', 'value' => ''],
-        ['group' => 'mo_etracker__config', 'name' => 'moetroot', 'type' => 'str', 'value' => ''],
-        ['group' => 'mo_etracker__config', 'name' => 'moetdebug', 'type' => 'bool', 'value' => false],
+        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__securecode', 'type' => 'str', 'value' => ''],
+        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__securekey', 'type' => 'str', 'value' => ''],
+        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__sechannel', 'type' => 'str', 'value' => ''],
+        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__root', 'type' => 'str', 'value' => ''],
+        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__debug', 'type' => 'bool', 'value' => false],
     ],
     'templates' => [
         'mo_etracker__eventhandler.tpl' => 'mo/etracker/views/tpl/eventhandler.tpl',

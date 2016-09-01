@@ -1,12 +1,12 @@
 [{$smarty.block.parent}]
 
-[{include file="mo_etracker__eventhandler"}]
+[{include file="mo_etracker__eventhandler.tpl"}]
 
 [{assign var=mo_etracker__config value=$oViewConf->mo_etracker__getConfiguration()}]
 [{assign var=mo_etracker__user value=$oView->getUser()}]
-[{if $mo_etracker__config.moetdebug && $mo_etracker__user && $mo_etracker__user->inGroup('oxidadmin')}]
+[{if $mo_etracker__config.mo_etracker__debug && $mo_etracker__user && $mo_etracker__user->inGroup('oxidadmin')}]
     <style>
-        #moetdebug {
+        #mo_etracker__debug {
             position: fixed;
             bottom: 0px;
             right: 0px;
@@ -23,29 +23,29 @@
             text-align: left;
         }
 
-        #moetdebug #moetdebugContent {
+        #mo_etracker__debug #mo_etracker__debugContent {
             font-size: 15px;
             font-family: monospace;
             line-height: 16px;
         }
     </style>
-    <div id="moetdebug">
+    <div id="mo_etracker__debug">
         <h2>Etracker-Module Debug</h2>
-        <div id="moetdebugContent">
-            [{foreach from=$oViewConf->moetGetEtrackerVars() key=varName item=value}]
+        <div id="mo_etracker__debugContent">
+            [{foreach from=$oViewConf->mo_etracker__getVars() key=varName item=value}]
             var [{$varName}] = '[{$value}]';
             [{/foreach}]
 
             var cc_attributes = new Object();
-            cc_attributes["language"] = ["[{$oViewConf->moetGetLanguageAbbr()}]", false];
+            cc_attributes["language"] = ["[{$oViewConf->mo_etracker__getLanguageAbbr()}]", false];
         </div>
     </div>
     <script type="text/javascript">
         //<![CDATA[
-        moetContent = unescape(document.getElementById('moetdebugContent').innerHTML);
+        mo_etracker__debugContent = unescape(document.getElementById('mo_etracker__debugContent').innerHTML);
         //add breaks => IE "forgets" <pre>-behavior after unescape()
-        moetContent = moetContent.replace(/';/g, "';<br />");
-        document.getElementById('moetdebugContent').innerHTML = moetContent;
+        mo_etracker__debugContent = mo_etracker__debugContent.replace(/';/g, "';<br />");
+        document.getElementById('mo_etracker__debugContent').innerHTML = mo_etracker__debugContent;
         //]]>
     </script>
 [{/if}]

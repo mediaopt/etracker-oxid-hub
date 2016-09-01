@@ -1,14 +1,23 @@
 <?php
+/**
+ * For the full copyright and license information, refer to the accompanying LICENSE file.
+ *
+ * @copyright 2016 derksen mediaopt GmbH
+ */
+
 
 /**
+ * This event is issued if a (potential) customers visits a product page.
  *
- * @author derksen mediaopt GmbH
+ * @author Andre Moelle <andre.moelle@mediaopt.de>
+ * @version ${VERSION}, ${REVISION}
+ * @package Mediaopt\Etracker\Event
  */
 class mo_etracker__productViewedEvent implements mo_etracker__event
 {
 
     /**
-     * @see mo_etracker__converter::fromProduct()
+     * @see mo_etracker__converter::fromArticle()
      * @var stdClass
      */
     protected $product = null;
@@ -33,7 +42,7 @@ class mo_etracker__productViewedEvent implements mo_etracker__event
      */
     public function __construct(\oxArticle $article, $basketId = '')
     {
-        $this->product = \oxRegistry::get('mo_etracker__converter')->fromProduct($article);
+        $this->product = \oxRegistry::get('mo_etracker__converter')->fromArticle($article);
         $this->basketId = $basketId;
     }
 
@@ -46,6 +55,7 @@ class mo_etracker__productViewedEvent implements mo_etracker__event
     }
 
     /**
+     * @see mo_etracker__event::getParameters()
      * @return array
      */
     public function getParameters()
