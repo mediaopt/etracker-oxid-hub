@@ -31,9 +31,9 @@ class CustomBundleMaker extends BundleMaker
 
     protected function writeVendorMetadata()
     {
-        $segments = [$this->config->getTemporaryFolder(), $this->config->getPathToModule(), '..', 'vendormetadata.php'];
+        $segments = array($this->config->getTemporaryFolder(), $this->config->getPathToModule(), '..', 'vendormetadata.php');
         $path = implode(DIRECTORY_SEPARATOR, $segments);
-        $vendorMetadata = implode("\n", ['<?php', '$sVendorMetadataVersion = \'1.0\';']);
+        $vendorMetadata = implode("\n", array('<?php', '$sVendorMetadataVersion = \'1.0\';'));
         file_put_contents($path, $vendorMetadata);
     }
 
