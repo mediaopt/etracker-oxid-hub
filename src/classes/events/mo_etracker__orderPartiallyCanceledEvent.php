@@ -21,7 +21,7 @@ class mo_etracker__orderPartiallyCanceledEvent implements mo_etracker__event
     public function __construct(\oxOrder $order, \oxOrderArticle $orderArticle)
     {
         $this->orderNumber = $order->oxorder__oxordernr->value;
-        $this->cancelledProducts = [\oxRegistry::get('mo_etracker__converter')->fromBasketItem($orderArticle)];
+        $this->cancelledProducts = [\oxRegistry::get('mo_etracker__converter')->fromOrderArticle($orderArticle)];
     }
 
     /**
