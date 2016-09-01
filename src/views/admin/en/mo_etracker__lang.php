@@ -6,6 +6,9 @@ $aLang = [
     'charset' => 'ISO-8859-1',
 
     'tbclcategory_etracker' => 'etracker',
+    'MO_ETRACKER__CATEGORY' => 'etracker Category',
+    'MO_ETRACKER__CATEGORY_HELP' => 'This identifier will transmitted to etracker instead of the category name.',
+    'MO_ETRACKER__SAVE' => 'Save',
 
     // Labels and help content for backend
     'SHOP_MODULE_GROUP_mo_etracker__config' => 'etracker Configuration',
