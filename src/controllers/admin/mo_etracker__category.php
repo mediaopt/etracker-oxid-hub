@@ -14,7 +14,7 @@ class mo_etracker__category extends \oxAdminDetails
     public function render()
     {
         parent::render();
-        return 'mo_etracker__category';
+        return 'mo_etracker__category.tpl';
     }
 
     /**

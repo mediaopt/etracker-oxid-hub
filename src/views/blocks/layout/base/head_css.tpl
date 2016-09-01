@@ -36,6 +36,6 @@
         //var et_se = "";
         //var et_tag = "";
     </script>
-    [{include file="mo_etracker__etracker_include"}]
+    [{include file="mo_etracker__etracker_include.tpl"}]
     <!-- etracker tracklet 4.0 end -->
 [{/if}]

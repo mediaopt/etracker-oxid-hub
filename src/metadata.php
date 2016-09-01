@@ -64,9 +64,9 @@ $aModule = [
         ['group' => 'mo_etracker__config', 'name' => 'moetdebug', 'type' => 'bool', 'value' => false],
     ],
     'templates' => [
-        'mo_etracker__eventhandler' => 'mo/etracker/views/tpl/eventhandler.tpl',
-        'mo_etracker__etracker_include' => 'mo/etracker/views/tpl/etracker_include.tpl',
-        'mo_etracker__category' => 'mo/etracker/views/admin/tpl/category.tpl',
+        'mo_etracker__eventhandler.tpl' => 'mo/etracker/views/tpl/eventhandler.tpl',
+        'mo_etracker__etracker_include.tpl' => 'mo/etracker/views/tpl/etracker_include.tpl',
+        'mo_etracker__category.tpl' => 'mo/etracker/views/admin/tpl/category.tpl',
     ],
     'events' => [
         'onActivate' => 'mo_etracker__install::onActivate',
