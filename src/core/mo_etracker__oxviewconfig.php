@@ -20,7 +20,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     protected $mo_etracker__view;
     protected $mo_etracker__order;
     protected $mo_etracker__basket;
-    protected $mo_etracker__rot;
+    protected $mo_etracker__root;
     protected $mo_etracker__config;
     protected $mo_etracker__vars = null;
 
@@ -36,10 +36,8 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         }
 
         $main = \oxRegistry::get('mo_etracker__main');
-        $myConfig = $this->getConfig();
-
-        $this->mo_etracker__view = $myConfig->getActiveView();
-        $this->mo_etracker__rot = oxRegistry::getConfig()->getConfigParam('mo_etracker__root');
+        $this->mo_etracker__view = $this->getConfig()->getActiveView();
+        $this->mo_etracker__root = oxRegistry::getConfig()->getConfigParam('mo_etracker__root');
 
         $etrackerVars = array();
         $etrackerVars['et_pagename'] = $this->mo_etracker__getPageName();
@@ -71,20 +69,13 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
 
     /**
      * get noscript vars
-     * @param array data
      *
+     * @param array $data
      * @return string
      */
     public function mo_etracker__getNoScriptVars($data)
     {
-        $main = \oxRegistry::get('mo_etracker__main');
-
-        //append tval, tonr & tsale to target param (only avail on last step)
-        if ($this->mo_etracker__view instanceof Thankyou) {
-            $data = $main->processThankYouData($data);
-        }
-
-        return $main->serializeData($data);
+        return \oxRegistry::get('mo_etracker__main')->serializeData($data);
     }
 
     /**
@@ -412,8 +403,8 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     {
         $root = '';
 
-        if ($this->mo_etracker__rot) {
-            $root = $this->mo_etracker__rot . '/';
+        if ($this->mo_etracker__root) {
+            $root = $this->mo_etracker__root . '/';
 
             if (!$asNode) {
                 $root .= '/';

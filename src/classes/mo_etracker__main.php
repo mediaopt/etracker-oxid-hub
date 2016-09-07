@@ -42,27 +42,9 @@ class mo_etracker__main
     }
 
     /**
-     * process thankyou data
-     * @param array data
-     *
-     * @return string
-     */
-    public function processThankYouData($data)
-    {
-        $data['et_target'] .= isset($data['et_tval']) ? ',' . $data['et_tval'] : ',';
-        $data['et_target'] .= isset($data['et_tonr']) ? ',' . $data['et_tonr'] : ',';
-        $data['et_target'] .= isset($data['et_tsale']) ? ',' . $data['et_tsale'] : ',';
-        unset($data['et_tval']);
-        unset($data['et_tonr']);
-        unset($data['et_tsale']);
-
-        return $data;
-    }
-
-    /**
      * process shop url
      *
-     * @param string shopUrl
+     * @param string $shopUrl
      * @return string
      */
     public function processShopUrl($shopUrl)
@@ -71,16 +53,15 @@ class mo_etracker__main
         if (preg_match('#^http://[^/]+/(.+)$#', $shopUrl, $matches)) {
             return preg_replace('#' . preg_quote($matches[1]) . '$#', '', $shopUrl);
         }
-
         return $shopUrl;
     }
 
 
     /**
      * get category entry
-     * @param $category
-     * @param $view
      *
+     * @param \oxCategory $category
+     * @param mixed $view
      * @return string
      */
     public function getCategoryEntry($category, $view)
@@ -101,6 +82,7 @@ class mo_etracker__main
      * escape slashes for etracker
      *
      * @param string $string
+     * @return string
      */
     public function escapeCharacters($string)
     {
@@ -119,17 +101,9 @@ class mo_etracker__main
     }
 
     /**
-     * replace separator chars
-     * @param string $string
-     */
-    public function cleanBasketString($string)
-    {
-        return rawurlencode(str_replace([',', ';'], '.', $string));
-    }
-
-    /**
      * serialize tracking params
-     * @param string $string
+     *
+     * @param string $data
      * @return string
      */
     public function serializeData($data)
@@ -152,26 +126,6 @@ class mo_etracker__main
         $translationKey = 'MOET_' . strtoupper($identifier);
         $translation = oxRegistry::getLang()->translateString($translationKey);
         return $translation !== $translationKey ? $translation : $identifier;
-    }
-
-    /**
-     * build string containing basketcontent
-     *
-     * @return string
-     */
-    public function buildBasketString($basket)
-    {
-        $etBasket = '';
-        foreach ($basket->getContents() as $basketItem) {
-            $product = $basketItem->getArticle();
-            $etBasket .= $this->cleanBasketString($product->oxarticles__oxid->value) . ',';
-            $etBasket .= $this->cleanBasketString($product->oxarticles__oxtitle->value) . ',';
-            $etBasket .= $this->cleanBasketString($product->getCategory()->oxcategories__oxtitle->value) . ',';
-            $etBasket .= $this->cleanBasketString($basketItem->getAmount()) . ',';
-            $etBasket .= number_format($basketItem->getPrice()->getNettoPrice(), 2);
-            $etBasket .= ';';
-        }
-        return $etBasket;
     }
 
     /**
