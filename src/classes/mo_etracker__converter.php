@@ -409,12 +409,12 @@ class mo_etracker__converter
      */
     protected function getCustomerGroup(\oxUser $user)
     {
-        // TODO: How to choose the most relevant customer group?
         $names = [];
         foreach ($user->getUserGroups() as $group) {
             $names[] = $group->oxgroups__oxtitle->value;
         }
-        return implode(',', $names);
+        sort($names);
+        return implode(',', );
     }
 
     /**
