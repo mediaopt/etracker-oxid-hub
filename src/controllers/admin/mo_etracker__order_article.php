@@ -33,8 +33,7 @@ class mo_etracker__order_article extends mo_etracker__order_article_parent
     {
         $orderArticle = \oxNew('oxorderarticle');
         $orderArticle->load(\oxRegistry::getConfig()->getRequestParameter('sArtID'));
-        $alreadyCanceled = $orderArticle->oxorderarticles__oxstorno->value == 1;
-        if (!$alreadyCanceled) {
+        if ($orderArticle->oxorderarticles__oxstorno->value != 1) {
             $order = \oxNew('oxOrder');
             $order->load($orderArticle->oxorderarticles__oxorderid->value);
             $event = new mo_etracker__orderPartiallyCanceledEvent($order, $orderArticle);
@@ -42,7 +41,7 @@ class mo_etracker__order_article extends mo_etracker__order_article_parent
 
         parent::storno();
 
-        if (!$alreadyCanceled) {
+        if (isset($event)) {
             \oxRegistry::get('mo_etracker__main')->trigger($event);
         }
     }
