@@ -109,20 +109,13 @@ class mo_etracker__main
 
     /**
      * escape etracker vars
-     * @param array $etrackerVars
      *
+     * @param array $etrackerVars
      * @return string
      */
     public function escapeValues($etrackerVars)
     {
-        $isAlreadyEscaped = ['et_basket'];
-        foreach ($etrackerVars as $key => $value) {
-            if (in_array($key, $isAlreadyEscaped)) {
-                continue;
-            }
-            $etrackerVars[$key] = rawurlencode($value);
-        }
-        return $etrackerVars;
+        return array_map('rawurlencode', $etrackerVars);
     }
 
     /**
