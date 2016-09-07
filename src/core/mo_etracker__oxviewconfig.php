@@ -42,27 +42,11 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         $this->mo_etracker__rot = oxRegistry::getConfig()->getConfigParam('mo_etracker__root');
 
         $etrackerVars = array();
-
         $etrackerVars['et_pagename'] = $this->mo_etracker__getPageName();
         $etrackerVars['et_areas'] = $this->mo_etracker__getAreas();
         $etrackerVars['et_url'] = $this->mo_etracker__getUrl();
         $etrackerVars['et_target'] = $this->mo_etracker__getTarget();
-
         $etrackerVars['et_se'] = oxRegistry::getConfig()->getConfigParam('mo_etracker__sechannel');
-
-//        if (is_a($this->mo_etracker__view, 'Thankyou')) {
-        // TODO: This is likely to be deleted.
-        if (false) {
-            $this->order = $this->mo_etracker__view->getOrder();
-            $this->basket = $this->mo_etracker__view->getBasket();
-
-            $etrackerVars['et_tval'] = $this->mo_etracker__getTval();
-            $etrackerVars['et_tonr'] = $this->mo_etracker__getTonr();
-            $etrackerVars['et_tsale'] = $this->mo_etracker__getTsale();
-            $etrackerVars['et_cust'] = $this->mo_etracker__getCust();
-            $etrackerVars['et_basket'] = $this->mo_etracker__getBasket();
-        }
-
         $etrackerVars = $main->escapeValues($etrackerVars);
 
         //no escaping here
