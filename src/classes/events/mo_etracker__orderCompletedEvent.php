@@ -30,11 +30,14 @@ class mo_etracker__orderCompletedEvent implements mo_etracker__event
     protected $pageName = '';
 
     /**
-     * @param oxOrder $order
+     * @param \oxOrder $order
+     * @param \oxBasket $basket
+     * @param string $pageName
      */
-    public function __construct(\oxOrder $order, \oxBasket $basket)
+    public function __construct(\oxOrder $order, \oxBasket $basket, $pageName = '')
     {
         $this->order = \oxRegistry::get('mo_etracker__converter')->fromOrder($order, $basket);
+        $this->pageName = $pageName;
     }
 
     /**

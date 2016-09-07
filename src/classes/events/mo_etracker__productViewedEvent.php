@@ -39,11 +39,13 @@ class mo_etracker__productViewedEvent implements mo_etracker__event
     /**
      * @param oxArticle $article
      * @param string $basketId
+     * @param string $pageName
      */
-    public function __construct(\oxArticle $article, $basketId = '')
+    public function __construct(\oxArticle $article, $basketId = '', $pageName = '')
     {
         $this->product = \oxRegistry::get('mo_etracker__converter')->fromArticle($article);
         $this->basketId = $basketId;
+        $this->pageName = $pageName;
     }
 
     /**

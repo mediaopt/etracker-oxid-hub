@@ -45,12 +45,14 @@ class mo_etracker__basketEvent
      * @param oxArticle $article
      * @param int $amount
      * @param string $basketId
+     * @param string $pageName
      */
-    public function __construct(\oxArticle $article, $amount, $basketId = '')
+    public function __construct(\oxArticle $article, $amount, $basketId = '', $pageName = '')
     {
         $this->product = \oxRegistry::get('mo_etracker__converter')->fromArticle($article);
         $this->quantity = $amount;
         $this->basketId = $basketId;
+        $this->pageName = $pageName;
     }
 
     /**
