@@ -73,7 +73,6 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
      */
     protected function mo_etracker__generateEvent($basketItem, $amountDelta)
     {
-        // TODO: When to set a page name?
         $basketId = $this->mo_etracker__getBasketId();
         if ($amountDelta > 0) {
             return new mo_etracker__basketFilledEvent($basketItem->getArticle(), $amountDelta, $basketId);
