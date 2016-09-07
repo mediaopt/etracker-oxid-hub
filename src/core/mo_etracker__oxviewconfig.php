@@ -48,13 +48,8 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         $etrackerVars['et_target'] = $this->mo_etracker__getTarget();
         $etrackerVars['et_se'] = oxRegistry::getConfig()->getConfigParam('mo_etracker__sechannel');
         $etrackerVars = $main->escapeValues($etrackerVars);
-
-        //no escaping here
         $etrackerVars['et_tag'] = 'language=' . $this->mo_etracker__getLanguageAbbr();
 
-        if ($main->hasEvents()) {
-            $etrackerVars['cc_pagename'] = $etrackerVars['et_pagename'];
-        }
         $this->mo_etracker__vars = $etrackerVars;
         return $this->mo_etracker__vars;
     }
