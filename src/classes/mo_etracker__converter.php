@@ -414,7 +414,7 @@ class mo_etracker__converter
             $names[] = $group->oxgroups__oxtitle->value;
         }
         sort($names);
-        return implode(',', );
+        return implode(',', $names);
     }
 
     /**
