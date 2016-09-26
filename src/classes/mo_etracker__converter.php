@@ -45,11 +45,11 @@ class mo_etracker__converter
         $categories = [];
         $etrackerCategories = [];
         $parent = $article->getCategory();
-        do {
+        while (!is_null($parent)) {
             array_unshift($categories, $parent->getTitle());
             array_unshift($etrackerCategories, $parent->oxcategories__mo_etracker__name->value);
             $parent = $parent->getParentCategory();
-        } while (!is_null($parent));
+        }
         $etrackerCategories = array_filter($etrackerCategories);
         return array_slice(empty($etrackerCategories) ? $categories : $etrackerCategories, -4);
     }
