@@ -4,6 +4,6 @@
   - [X] metadata.php
 * DONE Changelog aktualisieren
   - [X] Changelog.txt
-* TODO Revision taggen
-* TODO Bundle erstellen
-* TODO Ticket für Modulveröffentlichung
+* DONE Revision taggen
+* DONE Bundle erstellen
+* DONE Ticket für Modulveröffentlichung
