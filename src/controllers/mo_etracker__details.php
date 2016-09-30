@@ -8,7 +8,6 @@
 /**
  * This class issues a event that a product has been viewed.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  * @extend Details

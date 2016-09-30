@@ -10,7 +10,6 @@
  *
  * Additionally, it sets a unique id, which will be transmitted to etracker.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  * @extend oxBasket

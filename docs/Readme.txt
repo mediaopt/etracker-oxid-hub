@@ -1,5 +1,5 @@
 == Title ==
-##name##
+mo_etracker
 
 == Author ==
 derksen mediaopt GmbH
@@ -8,7 +8,7 @@ derksen mediaopt GmbH
 mo
 
 == Version ==
-1.0.0
+2.1.0
 
 == Link ==
 http://www.mediaopt.de
@@ -17,13 +17,26 @@ http://www.mediaopt.de
 support@mediaopt.de
 
 == Description ==
-TODO
+The etracker web controlling module transmits any information that is necessary for WebAnalytics and the Product
+Performance Report (since 2.1).
 
 == Handbook ==
-TODO
+https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation
 
 == Extend ==
-TODO
+* oxorder
+  - cancelOrder
+  - finalizeOrder
+* oxbasket
+  - addToBasket
+* oxviewconfig
+* details
+  - render
+* order_list
+  - render
+* order_article
+  - render
+  - storno
 
 == Installation ==
 * Copy contents from this directory into the shop root.

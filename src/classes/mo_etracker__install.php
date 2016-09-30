@@ -8,7 +8,6 @@
 /**
  * Class for module (de)activation.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
@@ -53,9 +52,11 @@ class mo_etracker__install
      */
     protected static function cleanUp()
     {
-        foreach (glob(\oxRegistry::getConfig()->getConfigParam('sCompileDir') . '*') as $pathToFile) {
-            if (is_file($pathToFile)) {
-                unlink($pathToFile);
+        foreach (['*', 'smarty/*'] as $pattern) {
+            foreach (glob(\oxRegistry::getConfig()->getConfigParam('sCompileDir') . $pattern) as $pathToFile) {
+                if (is_file($pathToFile)) {
+                    unlink($pathToFile);
+                }
             }
         }
     }

@@ -6,7 +6,6 @@
 /**
  * This interface has to be implemented by each event that is to be to transmitted to etracker.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */

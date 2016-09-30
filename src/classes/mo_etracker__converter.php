@@ -8,7 +8,6 @@
 /**
  * This class provides functionality to convert OXID artifacts into the corresponding etracker artifacts.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */

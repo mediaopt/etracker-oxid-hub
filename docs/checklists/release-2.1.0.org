@@ -1,0 +1,9 @@
+
+* DONE Versionsnummer aktualisieren
+  - [X] project.json
+  - [X] metadata.php
+* DONE Changelog aktualisieren
+  - [X] Changelog.txt
+* TODO Revision taggen
+* TODO Bundle erstellen
+* TODO Ticket für Modulveröffentlichung

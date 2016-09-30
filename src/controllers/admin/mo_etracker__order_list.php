@@ -8,9 +8,9 @@
 /**
  * This controller allows to cancel an order.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
+ * @extend
  */
 class mo_etracker__order_list extends mo_etracker__order_list_parent
 {

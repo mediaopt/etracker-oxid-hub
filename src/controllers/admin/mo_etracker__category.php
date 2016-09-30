@@ -8,7 +8,6 @@
 /**
  * This controller enables to set a category name specifically to be used with etracker.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */

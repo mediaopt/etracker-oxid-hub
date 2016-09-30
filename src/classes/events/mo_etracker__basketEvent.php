@@ -8,7 +8,6 @@
 /**
  * This event contains functionality shared by basketEmptiedEvent and basketFilledEvent.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */

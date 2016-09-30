@@ -8,7 +8,6 @@
 /**
  * This class issues an event if a new order has been placed and confirms it immediately.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  * @extend oxOrder

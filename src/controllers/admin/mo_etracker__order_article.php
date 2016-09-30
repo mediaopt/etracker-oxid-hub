@@ -8,7 +8,6 @@
 /**
  * This controller enables to cancel a single article.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  * @extend Order_Article

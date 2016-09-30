@@ -8,7 +8,6 @@
 /**
  * This event is issued if an item has been added to the basket.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */

@@ -9,7 +9,6 @@
 /**
  * This event is issued if an order has been confirmed.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */

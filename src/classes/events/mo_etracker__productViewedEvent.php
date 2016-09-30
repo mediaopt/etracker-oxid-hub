@@ -9,7 +9,6 @@
 /**
  * This event is issued if a (potential) customers visits a product page.
  *
- * @author Andre Moelle <andre.moelle@mediaopt.de>
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */

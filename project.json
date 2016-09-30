@@ -6,8 +6,8 @@
     "suffix": "",
     "version": "2.1.0",
     "compatibility": {
-        "minimumVersion": null,
-        "maximumVersion": null,
+        "minimumVersion": "4.7",
+        "maximumVersion": "5.3",
         "blacklist": []
     }
 }
