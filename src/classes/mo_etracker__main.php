@@ -155,7 +155,8 @@ class mo_etracker__main
      */
     public function hasEvents()
     {
-        $this->eventsQueued |= !empty(\oxRegistry::getSession()->getVariable(self::EVENT_QUEUE));
+        $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
+        $this->eventsQueued |= !empty($eventQueue);
         return $this->eventsQueued;
     }
 

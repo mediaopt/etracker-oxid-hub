@@ -1,0 +1,9 @@
+
+* Versionsnummer aktualisieren
+  - project.json
+  - metadata.php
+* Changelog aktualisieren
+  - Changelog.txt
+* Revision taggen
+* Bundle erstellen
+* Ticket für Modulveröffentlichung

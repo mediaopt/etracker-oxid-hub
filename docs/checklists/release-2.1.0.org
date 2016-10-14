@@ -1,9 +1,0 @@
-
-* DONE Versionsnummer aktualisieren
-  - [X] project.json
-  - [X] metadata.php
-* DONE Changelog aktualisieren
-  - [X] Changelog.txt
-* DONE Revision taggen
-* DONE Bundle erstellen
-* DONE Ticket für Modulveröffentlichung
