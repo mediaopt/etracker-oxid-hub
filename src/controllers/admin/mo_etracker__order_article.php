@@ -35,7 +35,7 @@ class mo_etracker__order_article extends mo_etracker__order_article_parent
         if ($orderArticle->oxorderarticles__oxstorno->value != 1) {
             $order = \oxNew('oxOrder');
             $order->load($orderArticle->oxorderarticles__oxorderid->value);
-            $event = new mo_etracker__orderPartiallyCanceledEvent($order, $orderArticle);
+            $event = \oxNew('mo_etracker__orderPartiallyCanceledEvent', $order, $orderArticle);
         }
 
         parent::storno();

@@ -21,7 +21,7 @@ class mo_etracker__oxorder extends mo_etracker__oxorder_parent
     public function cancelOrder()
     {
         parent::cancelOrder();
-        \oxRegistry::get('mo_etracker__main')->trigger(new mo_etracker__orderCanceledEvent($this));
+        \oxRegistry::get('mo_etracker__main')->trigger(\oxNew('mo_etracker__orderCanceledEvent', $this));
     }
 
     /**
@@ -29,6 +29,7 @@ class mo_etracker__oxorder extends mo_etracker__oxorder_parent
      * @param oxBasket $basket
      * @param $user
      * @param bool $recalculatingOrder
+     * @return int
      */
     public function finalizeOrder(\oxBasket $basket, $user, $recalculatingOrder = false)
     {
@@ -36,9 +37,10 @@ class mo_etracker__oxorder extends mo_etracker__oxorder_parent
         $status = parent::finalizeOrder($basket, $user, $recalculatingOrder);
         if ($status === oxOrder::ORDER_STATE_OK && $isNewOrder) {
             \oxRegistry::get('mo_etracker__main')
-                ->trigger(new mo_etracker__orderCompletedEvent($this, $basket))
-                ->trigger(new mo_etracker__orderConfirmedEvent($this));
+                ->trigger(\oxNew('mo_etracker__orderCompletedEvent', $this, $basket))
+                ->trigger(\oxNew('mo_etracker__orderConfirmedEvent', $this));
         }
+        return $status;
     }
 
 }

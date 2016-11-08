@@ -68,16 +68,16 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
     /**
      * @param \oxBasketItem $basketItem
      * @param int $amountDelta
-     * @return mo_etracker__basketFilledEvent
+     * @return mo_etracker__basketFilledEvent|mo_etracker__basketEmptiedEvent
      */
     protected function mo_etracker__generateEvent($basketItem, $amountDelta)
     {
         $basketId = $this->mo_etracker__getBasketId();
         if ($amountDelta > 0) {
-            return new mo_etracker__basketFilledEvent($basketItem->getArticle(), $amountDelta, $basketId);
+            return \oxNew('mo_etracker__basketFilledEvent', $basketItem->getArticle(), $amountDelta, $basketId);
         }
         if ($amountDelta < 0) {
-            return new mo_etracker__basketEmptiedEvent($basketItem->getArticle(), -$amountDelta, $basketId);
+            return \oxNew('mo_etracker__basketEmptiedEvent', $basketItem->getArticle(), -$amountDelta, $basketId);
         }
 
         return null;

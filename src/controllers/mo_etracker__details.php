@@ -21,7 +21,8 @@ class mo_etracker__details extends mo_etracker__details_parent
      */
     public function render()
     {
-        $event = new mo_etracker__productViewedEvent(
+        $event = \oxNew(
+            'mo_etracker__productViewedEvent',
             $this->getProduct(),
             \oxRegistry::getSession()->getBasket()->mo_etracker__getBasketId()
         );
