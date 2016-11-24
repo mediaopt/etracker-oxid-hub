@@ -4,7 +4,7 @@
     "pathToModule": "copy_this/modules/mo/etracker",
     "prefix": "mo_",
     "suffix": "",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "compatibility": {
         "minimumVersion": "4.7",
         "maximumVersion": "5.3",
