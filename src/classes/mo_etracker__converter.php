@@ -83,9 +83,8 @@ class mo_etracker__converter
      */
     protected function enrichProductWithManufacturer(\oxArticle $article, stdClass $etrackerProduct)
     {
-        /** @var oxManufacturer $manufacturer */
         $manufacturer = $article->getManufacturer();
-        if (!is_null($manufacturer)) {
+        if ($manufacturer instanceof oxManufacturer) {
             $etrackerProduct->pro_name = $manufacturer->getTitle();
         }
     }
