@@ -233,7 +233,7 @@ class mo_etracker__converter
     protected function getDiscountsFromBasket(\mo_etracker__oxbasket $basket)
     {
         $products = [];
-        foreach ($basket->getDiscounts() as $discount) {
+        foreach ((array)$basket->getDiscounts() as $discount) {
             $etrackerBasketItem = new stdClass();
             $etrackerBasketItem->product = new stdClass();
             $etrackerBasketItem->product->id = $discount->sOXID;
