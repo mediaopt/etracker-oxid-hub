@@ -1,6 +1,6 @@
 
 == 2.1.3 ==
-* Bugfix: Warning removed if no discount was
+* Bugfix: Warning removed in case of no discount
 * Bugfix: Autoloader problems were fixed
 
 == 2.1.2 ==
