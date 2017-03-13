@@ -66,15 +66,27 @@ class mo_etracker__converter
             return $variants;
         }
 
-        // The | is magic, but this should not pose any problem.
-        $variantNames = explode('|', $product->oxarticles__oxvarname);
-        $selectedVariants = explode('|', $product->oxarticles__oxvarselect);
-
         // We can transmit up to three variants. For now, we choose the first three.
-        for ($i = 0; $i < min(3, count($variantNames), count($selectedVariants)); $i++) {
-            $variants->{trim($variantNames[$i])} = trim($selectedVariants[$i]);
+        return (object)array_slice($this->extractVariants($product), 0, 3, true);
+    }
+
+    /**
+     * @param oxArticle $product
+     * @return string[]
+     */
+    protected function extractVariants(\oxArticle $product)
+    {
+        // The | is magic, but this should not pose any problem.
+        $names = explode('|', $product->getParentArticle()->oxarticles__oxvarname);
+        $values = explode('|', $product->oxarticles__oxvarselect);
+        $variantsArray = [];
+        foreach (range(0, min(count($names), count($values))) as $i) {
+            $name = trim($names[$i]);
+            if (!empty($name)) {
+                $variantsArray[$name] = trim($values[$i]);
+            }
         }
-        return $variants;
+        return $variantsArray;
     }
 
     /**
@@ -357,11 +369,13 @@ class mo_etracker__converter
             return $this->getInvoiceInformation($order);
         }
 
-        return array_filter([
-            $order->getDelCountry(),
-            $deliveryAddress->getStateTitle(),
-            $deliveryAddress->oxaddress__oxcity->value
-        ]);
+        return array_filter(
+            [
+                $order->getDelCountry(),
+                $deliveryAddress->getStateTitle(),
+                $deliveryAddress->oxaddress__oxcity->value
+            ]
+        );
     }
 
     /**
@@ -426,9 +440,13 @@ class mo_etracker__converter
      */
     protected function getCouponCodes(\mo_etracker__oxbasket $basket)
     {
-        $couponCodes = implode(',', array_map(function ($voucher) {
-            return $voucher->sVoucherNr;
-        }, $basket->getVouchers()));
+        $couponCodes = implode(
+            ',', array_map(
+                   function ($voucher) {
+                       return $voucher->sVoucherNr;
+                   }, $basket->getVouchers()
+               )
+        );
 
         if (strlen($couponCodes) <= 50) {
             return $couponCodes;
