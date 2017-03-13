@@ -2,6 +2,7 @@
 == 2.1.3 ==
 * Bugfix: Warning removed in case of no discount
 * Bugfix: Autoloader problems were fixed
+* Bugfix: Added robustness in case of handling variants
 
 == 2.1.2 ==
 * Clarification of the module configuration
