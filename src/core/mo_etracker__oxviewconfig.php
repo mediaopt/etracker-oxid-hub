@@ -85,36 +85,22 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function mo_etracker__getPageName()
     {
-        $myConfig = $this->getConfig();
-        $main = \oxRegistry::get('mo_etracker__main');
-
-        $sShopURL = $myConfig->getConfigParam('sShopURL');
-        if (!$uri = $main->processShopUrl($sShopURL)) {
-            $uri = $_SERVER['REQUEST_URI'];
+        //special case for index
+        if ($this->getActiveClassName() === 'start') {
+            return '__INDEX__';
         }
 
+        $main = \oxRegistry::get('mo_etracker__main');
+        $uri = $main->processShopUrl($this->getConfig()->getConfigParam('sShopURL')) ?: $_SERVER['REQUEST_URI'];
         $pagename = $this->mo_etracker__handlePageName($uri);
 
         //prepend path
-        if ($path = $this->mo_etracker__getPath()) {
-            $pagename = $main->prependPath($pagename, $path);
+        $path = $this->mo_etracker__getPath();
+        if (!empty($path)) {
+            $pagename = rtrim($pagename . '/' . $path, '/');
         }
 
-        //on empty pagename, translate view
-        if (!$pagename) {
-            $pagename = $this->mo_etracker__getViewInformation();
-        }
-
-        //prepend root
-        $pagename = $this->mo_etracker__getRoot() . $pagename;
-        $pagename = rtrim($pagename, '/');
-
-        //special case for index
-        if ($this->getActiveClassName() == 'start') {
-            $pagename = '__INDEX__' . $pagename;
-        }
-
-        return $pagename;
+        return rtrim($this->mo_etracker__getRoot() . $pagename . '/' . $this->mo_etracker__getViewInformation(), '/');
     }
 
     /**
@@ -136,7 +122,8 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             return $main->escapeCharacters($matches[1]);
         }
 
-        if (($baseview = $this->getConfig()->getRequestParameter('cl')) && ($baseview != 'start')) {
+        $baseview = $this->getConfig()->getRequestParameter('cl');
+        if (!empty($baseview) && $baseview !== 'start') {
             //special handling for start-view => empty pagename
             return $main->translate($baseview);
         }
