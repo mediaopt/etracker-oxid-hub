@@ -1,4 +1,8 @@
 
+== 2.1.4 ==
+* Extraction for et_pagename improved
+* Bug caused by variants without name fixed
+
 == 2.1.3 ==
 * Bugfix: Warning removed in case of no discount
 * Bugfix: Autoloader problems were fixed
