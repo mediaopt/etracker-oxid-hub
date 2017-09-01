@@ -1,7 +1,7 @@
 {
     "platform": "Oxid",
     "projectName": "etracker",
-    "pathToModule": "copy_this/modules/mo/etracker",
+    "pathToModule": "copy_this/modules/mo",
     "prefix": "mo_",
     "suffix": "",
     "version": "2.1.5",
