@@ -3,20 +3,20 @@
 $sMetadataVersion = '1.1';
 $aModule = [
     'id' => 'mo_etracker',
-    'title' => 'mediaopt etracker Webcontrolling',
+    'title'       => 'mediaopt etracker Webcontrolling',
     'description' => [
         'de' => '<p>Erweitern Sie Ihren Shop um etracker Webcontrolling.</p>'
             . '<p><a href="https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation" target="_blank">Handbuch</a></p>',
         'en' => '<p>Add etracker features to your OXID shop.</p>'
             . '<p><a href="https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation" target="_blank">Handbook</a></p>',
     ],
-    'lang' => 'en',
-    'thumbnail' => 'logo.png',
-    'version' => '2.1.4 ##revision##',
-    'author' => 'derksen mediaopt GmbH',
-    'url' => 'https://www.mediaopt.de',
-    'email' => 'support@mediaopt.de',
-    'extend' => [
+    'lang'        => 'en',
+    'thumbnail'   => 'logo.png',
+    'version'     => 'develop',
+    'author'      => 'derksen mediaopt GmbH',
+    'url'         => 'https://www.mediaopt.de',
+    'email'       => 'support@mediaopt.de',
+    'extend'      => [
         'oxorder' => 'mo/etracker/core/mo_etracker__oxorder',
         'oxbasket' => 'mo/etracker/core/mo_etracker__oxbasket',
         'oxviewconfig' => 'mo/etracker/core/mo_etracker__oxviewconfig',

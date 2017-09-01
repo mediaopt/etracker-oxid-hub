@@ -31,24 +31,25 @@ class mo_etracker__install
      * @param string $table
      * @param string $column
      * @param string $type
-     * @return null
+     *
+     * @return int
      * @throws Exception
      */
     protected static function addColumn($table, $column, $type)
     {
         try {
-            \oxDb::getDb()->execute("ALTER TABLE " . $table . " ADD COLUMN " . $column . " " . $type . ";");
+            \oxDb::getDb()->execute("ALTER TABLE $table ADD COLUMN $column $type;");
+            return 1;
         } catch (Exception $ex) {
-            if ($ex->getCode() != 1060) {
+            if ($ex->getCode() !== 1060) {
                 throw $ex;
             }
+            return 0;
         }
     }
 
     /**
      * Deletes every file in the tmp directory.
-     *
-     * @return null
      */
     protected static function cleanUp()
     {
@@ -66,7 +67,7 @@ class mo_etracker__install
      */
     protected static function getFunctionsFile()
     {
-        return implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', '..', 'functions.php']);
+        return \oxRegistry::getConfig()->getModulesDir() . '/functions.php';
     }
 
 
@@ -96,19 +97,19 @@ class mo_etracker__install
     /**
      * Adds the bootstrap loader.
      *
-     * @return bool
+     * @throws \Exception
      */
     public static function onActivate()
     {
         if (!static::isInstallable()) {
-            return false;
+            return;
         }
 
         static::addBootstrapLoader();
-        static::addColumn('oxcategories', 'mo_etracker__name', 'VARCHAR(50) NOT NULL DEFAULT ""');
-        \oxNew('oxDbMetaDataHandler')->updateViews();
+        if (static::addColumn('oxcategories', 'mo_etracker__name', 'VARCHAR(50) NOT NULL DEFAULT ""')) {
+            \oxNew('oxDbMetaDataHandler')->updateViews();
+        }
         static::cleanUp();
-        return true;
     }
 
     /**
@@ -116,15 +117,16 @@ class mo_etracker__install
      */
     protected static function addBootstrapLoader()
     {
-        $lines = file_exists(static::getFunctionsFile()) ? file(static::getFunctionsFile(),
-            FILE_IGNORE_NEW_LINES) : ['<?php'];
+        $lines = file_exists(static::getFunctionsFile())
+            ? file(static::getFunctionsFile(), FILE_IGNORE_NEW_LINES)
+            : ['<?php'];
         $bootstrapLoader = static::getBootstrapLoaderStatement();
 
-        if (in_array($bootstrapLoader, $lines) !== false) {
+        if (in_array($bootstrapLoader, $lines, true) !== false) {
             return;
         }
 
-        $lineOfClosingTag = array_search('?>', $lines);
+        $lineOfClosingTag = array_search('?>', $lines, true);
         if ($lineOfClosingTag !== false) {
             $lines = array_slice($lines, 0, $lineOfClosingTag);
         }
@@ -159,16 +161,15 @@ class mo_etracker__install
     public static function onDeactivate()
     {
         if (!static::isDeinstallable()) {
-            return false;
+            return;
         }
-
         static::removeBootstrapLoader();
-        \oxNew('oxDbMetaDataHandler')->updateViews();
         static::cleanUp();
     }
 
     /**
-     * Removes the line in the functions.php in the modules directory that loads the bootstrap, in case this line exists.
+     * Removes the line in the functions.php in the modules directory that loads the bootstrap, in case this line
+     * exists.
      */
     protected static function removeBootstrapLoader()
     {
@@ -177,7 +178,7 @@ class mo_etracker__install
         }
 
         $lines = file(static::getFunctionsFile(), FILE_IGNORE_NEW_LINES);
-        $lineOfBootstrapLoader = array_search(static::getBootstrapLoaderStatement(), $lines);
+        $lineOfBootstrapLoader = array_search(static::getBootstrapLoaderStatement(), $lines, true);
         if ($lineOfBootstrapLoader !== false) {
             unset($lines[$lineOfBootstrapLoader]);
         }

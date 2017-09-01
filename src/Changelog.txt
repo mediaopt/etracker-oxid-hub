@@ -1,4 +1,7 @@
 
+== develop ==
+* Improved the installation process
+
 == 2.1.4 ==
 * Extraction for et_pagename improved
 * Bug caused by variants without name fixed
