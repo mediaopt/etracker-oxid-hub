@@ -1,6 +1,11 @@
 [{$smarty.block.parent}]
 
-[{include file="mo_etracker__eventhandler.tpl"}]
+[{assign var=mo_etracker__events value=$oViewConf->mo_etracker__getEventCalls()}]
+[{if $oViewConf->mo_etracker__isConfigComplete()}]
+    <script type="text/javascript">
+        [{include file="mo_etracker__eventhandler.tpl"}]
+    </script>
+[{/if}]
 
 [{assign var=mo_etracker__config value=$oViewConf->mo_etracker__getConfiguration()}]
 [{assign var=mo_etracker__user value=$oView->getUser()}]
@@ -33,6 +38,7 @@
         <h2>Etracker-Module Debug</h2>
         <div id="mo_etracker__debugContent">
             [{include file="mo_etracker__etracker_vars.tpl"}]
+            [{include file="mo_etracker__eventhandler.tpl"}]
         </div>
     </div>
     <script type="text/javascript">
