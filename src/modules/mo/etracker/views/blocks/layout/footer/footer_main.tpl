@@ -32,19 +32,14 @@
     <div id="mo_etracker__debug">
         <h2>Etracker-Module Debug</h2>
         <div id="mo_etracker__debugContent">
-            [{foreach from=$oViewConf->mo_etracker__getVars() key=varName item=value}]
-            var [{$varName}] = '[{$value}]';
-            [{/foreach}]
-
-            var cc_attributes = new Object();
-            cc_attributes["language"] = ["[{$oViewConf->mo_etracker__getLanguageAbbr()}]", false];
+            [{include file="mo_etracker__etracker_vars.tpl"}]
         </div>
     </div>
     <script type="text/javascript">
         //<![CDATA[
         mo_etracker__debugContent = unescape(document.getElementById('mo_etracker__debugContent').innerHTML);
         //add breaks => IE "forgets" <pre>-behavior after unescape()
-        mo_etracker__debugContent = mo_etracker__debugContent.replace(/';/g, "';<br />");
+        mo_etracker__debugContent = mo_etracker__debugContent.replace(/(["')\]];)/g, "$1<br />");
         document.getElementById('mo_etracker__debugContent').innerHTML = mo_etracker__debugContent;
         //]]>
     </script>

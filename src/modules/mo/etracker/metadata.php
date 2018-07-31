@@ -69,6 +69,7 @@ $aModule = [
     'templates'   => [
         'mo_etracker__eventhandler.tpl'     => 'mo/etracker/views/tpl/eventhandler.tpl',
         'mo_etracker__etracker_include.tpl' => 'mo/etracker/views/tpl/etracker_include.tpl',
+        'mo_etracker__etracker_vars.tpl' => 'mo/etracker/views/tpl/etracker_vars.tpl',
         'mo_etracker__category.tpl'         => 'mo/etracker/views/admin/tpl/category.tpl',
     ],
     'events'      => [
