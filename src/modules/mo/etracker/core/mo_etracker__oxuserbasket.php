@@ -58,7 +58,6 @@ class mo_etracker__oxuserbasket extends mo_etracker__oxuserbasket_parent
      */
     protected function mo_etracker__generateEvent($article, $amountDelta)
     {
-        var_dump('event '.$amountDelta);
         if ($amountDelta > 0) {
             return \oxNew('mo_etracker__noticelistFilledEvent', $article, $amountDelta);
         }
