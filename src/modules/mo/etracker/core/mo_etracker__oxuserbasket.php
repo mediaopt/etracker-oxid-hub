@@ -56,7 +56,7 @@ class mo_etracker__oxuserbasket extends mo_etracker__oxuserbasket_parent
      * @param \oxArticle    $article
      * @param int           $amountDelta
      *
-     * @return mo_etracker__noticelistFilledEvent|mo_etracker__noticelistEmptiedEvent
+     * @return mo_etracker__noticelistFilledEvent|mo_etracker__noticelistEmptiedEvent|null
      */
     protected function mo_etracker__generateEvent($article, $amountDelta)
     {
