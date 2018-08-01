@@ -19,35 +19,37 @@ class mo_etracker__oxuserbasket extends mo_etracker__oxuserbasket_parent
      *
      *
      * @extend
-     * @param string $sProductId Article ID
-     * @param double $dAmount    Product amount
-     * @param array  $aSel       product select lists
-     * @param bool   $blOverride if true overrides $dAmount, else sums previous with current it
-     * @param array  $aPersParam product persistent parameters (default null)
+     *
+     * @param string $productId        Article ID
+     * @param double $amount           Product amount
+     * @param array  $selectionList    product select lists
+     * @param bool   $isOverride       if true overrides $dAmount, else sums previous with current it
+     * @param array  $persistentParams product persistent parameters (default null)
      *
      * @return integer
      */
-    public function addItemToBasket($sProductId = null, $dAmount = null, $aSel = null, $blOverride = false, $aPersParam = null) {
-
+    public function addItemToBasket($productId = null, $amount = null, $selectionList = null, $isOverride = false, $persistentParams = null)
+    {
         if ($this->oxuserbaskets__oxtitle->value !== 'noticelist') {
-            return parent::addItemToBasket($sProductId, $dAmount, $aSel, $blOverride, $aPersParam);
+            return parent::addItemToBasket($productId, $amount, $selectionList, $isOverride, $persistentParams);
         }
 
-        $previousBasketItem = $this->getItem($sProductId, $aSel, $aPersParam);
+        $previousBasketItem = $this->getItem($productId, $selectionList, $persistentParams);
         $previousAmount = $previousBasketItem->oxuserbasketitems__oxamount->value;
 
-        $amount = parent::addItemToBasket($sProductId, $dAmount, $aSel, $blOverride, $aPersParam);
-        $basketItem = $this->getItem($sProductId, $aSel, $aPersParam);
+        $addedAmount = parent::addItemToBasket($productId, $amount, $selectionList, $isOverride, $persistentParams);
+        $basketItem = $this->getItem($productId, $selectionList, $persistentParams);
 
         assert(!is_null($basketItem) || !is_null($previousBasketItem));
 
         $currentAmount = $basketItem->oxuserbasketitems__oxamount->value;
 
-        $event = $this->mo_etracker__generateEvent($basketItem->getArticle($this->_getItemKey($sProductId, $aSel, $aPersParam)), $dAmount === 0.0 ? -$previousAmount : $currentAmount - $previousAmount);
+        $event = $this->mo_etracker__generateEvent($basketItem->getArticle($this->_getItemKey($productId, $selectionList, $persistentParams)), ($amount === 0.0 || $amount === 0) ? -$previousAmount : $currentAmount - $previousAmount);
         if (!is_null($event)) {
             \oxRegistry::get('mo_etracker__main')->trigger($event);
         }
-        return $amount;
+
+        return $addedAmount;
     }
 
     /**
