@@ -463,7 +463,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     /**
      * Transforms the queued events into events that can be transmitted to etracker.
      *
-     * @return string
+     * @return array
      */
     public function mo_etracker__getEventCalls()
     {
@@ -471,7 +471,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         foreach (\oxRegistry::get('mo_etracker__main')->takeEvents() as $event) {
             $calls[] = array_merge(['sendEvent', $event->getEventName()], $event->getParameters());
         }
-        return json_encode($calls);
+        return $calls;
     }
 
 }

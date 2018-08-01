@@ -30,27 +30,18 @@ class mo_etracker__basketEvent
      *
      * @var string
      */
-    protected $basketId = '';
-
-    /**
-     * Optional.
-     *
-     * @var string
-     */
     protected $pageName = '';
 
     /**
      * mo_etracker__basketFilledEvent constructor.
      * @param oxArticle $article
      * @param int $amount
-     * @param string $basketId
      * @param string $pageName
      */
-    public function __construct(\oxArticle $article, $amount, $basketId = '', $pageName = '')
+    public function __construct(\oxArticle $article, $amount, $pageName = '')
     {
         $this->product = \oxRegistry::get('mo_etracker__converter')->fromArticle($article);
         $this->quantity = $amount;
-        $this->basketId = $basketId;
         $this->pageName = $pageName;
     }
 
@@ -60,11 +51,8 @@ class mo_etracker__basketEvent
     public function getParameters()
     {
         $parameters = [$this->product, $this->quantity];
-        foreach (['basketId', 'pageName'] as $property) {
-            if (empty($this->$property)) {
-                break;
-            }
-            $parameters[] = $this->$property;
+        if (!empty($this->pageName)) {
+            $parameters[] = $this->pageName;
         }
         return $parameters;
     }
