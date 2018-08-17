@@ -1,6 +1,11 @@
 
-== develop ==
+== 2.1.5 ==
 * Improved the installation process
+* Oxid 6 compatibility
+* track put on wishlist
+* track removed from wishlist
+* track searchs
+* use do not track flag: data-respect-dnt
 
 == 2.1.4 ==
 * Extraction for et_pagename improved

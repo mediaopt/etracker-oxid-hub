@@ -7,7 +7,7 @@
     "version": "2.1.5",
     "compatibility": {
         "minimumVersion": "4.7",
-        "maximumVersion": "5.3",
+        "maximumVersion": "6.0",
         "blacklist": []
     }
 }
