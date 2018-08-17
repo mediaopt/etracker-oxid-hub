@@ -1,0 +1,27 @@
+
+== 2.1.5 ==
+* Improved the installation process
+* Oxid 6 compatibility
+* track put on wishlist
+* track removed from wishlist
+* track searchs
+* use do not track flag: data-respect-dnt
+
+== 2.1.4 ==
+* Extraction for et_pagename improved
+* Bug caused by variants without name fixed
+
+== 2.1.3 ==
+* Bugfix: Warning removed in case of no discount
+* Bugfix: Autoloader problems were fixed
+* Bugfix: Added robustness in case of handling variants
+
+== 2.1.2 ==
+* Clarification of the module configuration
+* Bugfix: Using \oxNew instead of new operator for creating event objects
+
+== 2.1.1 ==
+* Added backwards compatibility for PHP 5.4
+
+== 2.1.0 ==
+* Support added for "Product Performance Report"
