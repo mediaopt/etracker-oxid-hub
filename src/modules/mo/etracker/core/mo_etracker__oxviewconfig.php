@@ -471,7 +471,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     {
         $calls = [];
         foreach (\oxRegistry::get('mo_etracker__main')->takeEvents() as $event) {
-            $calls[] = array_merge(['sendEvent', $event->getEventName()], $event->getParameters());
+            $calls[] = array_merge([$event->getEventName()], $event->getParameters());
         }
         return $calls;
     }
