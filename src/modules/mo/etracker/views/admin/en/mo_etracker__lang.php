@@ -3,7 +3,7 @@
 $sLangName = 'English';
 
 $aLang = [
-    'charset' => 'ISO-8859-1',
+    'charset' => 'UTF-8',
 
     'tbclcategory_etracker'                 => 'etracker',
     'MO_ETRACKER__CATEGORY'                 => 'etracker Category',

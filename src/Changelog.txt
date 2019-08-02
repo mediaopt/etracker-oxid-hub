@@ -1,3 +1,8 @@
+== 2.1.7 ==
+* language files in UTF-8
+
+== 2.1.6 ==
+* request all resources via SSL
 
 == 2.1.5 ==
 * Improved the installation process

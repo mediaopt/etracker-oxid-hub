@@ -164,12 +164,14 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     /**
      * rewrite urls if method is post
      *
-     * @return unknown
+     * @return string
      */
     protected function mo_etracker__getUrl()
     {
+        $prefix = $this->getConfig()->isSsl() ? 'https://' : 'http://';
+
         if (empty($_POST)) {
-            return 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            return $prefix . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         } else {
             $query = array();
             if (!empty($_POST['cl'])) {
@@ -179,7 +181,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
                 $query['fnc'] = $_POST['fnc'];
             }
 
-            return 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . http_build_query($query);
+            return $prefix . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . http_build_query($query);
         }
     }
 
@@ -469,7 +471,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     {
         $calls = [];
         foreach (\oxRegistry::get('mo_etracker__main')->takeEvents() as $event) {
-            $calls[] = array_merge(['sendEvent', $event->getEventName()], $event->getParameters());
+            $calls[] = array_merge([$event->getEventName()], $event->getParameters());
         }
         return $calls;
     }

@@ -8,10 +8,10 @@ derksen mediaopt GmbH
 mo
 
 == Version ==
-2.1.5
+2.1.7
 
 == Link ==
-http://www.mediaopt.de
+https://www.mediaopt.de
 
 == Mail ==
 support@mediaopt.de
