@@ -3,7 +3,7 @@
 $sLangName = 'Italiano';
 
 $aLang = [
-    'charset' => 'ISO-8859-1',
+    'charset' => 'UTF-8',
 
      // View names
     'MOET_ALIST'  => 'categorypage',
