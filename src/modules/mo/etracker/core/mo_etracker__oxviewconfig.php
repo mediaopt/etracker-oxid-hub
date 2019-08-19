@@ -23,6 +23,8 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     protected $mo_etracker__root;
     protected $mo_etracker__config;
     protected $mo_etracker__vars = null;
+    const MODULENAME = 'mo_etracker';
+    const SHOPSYSTEMPREFIX = 'OXID_';
 
     /**
      * get etracker vars
@@ -474,6 +476,20 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             $calls[] = array_merge([$event->getEventName()], $event->getParameters());
         }
         return $calls;
+    }
+
+    /**
+     * returns the oxid-version of the etracker module OXID_version
+     *
+     * @return string
+     */
+    public function mo_etracker__getModuleVersion()
+    {
+        $module = \oxNew('oxModule');
+        if (!$module->load(self::MODULENAME)) {
+            return '';
+        }
+        return self::SHOPSYSTEMPREFIX . $module->getInfo('version');
     }
 
 }
