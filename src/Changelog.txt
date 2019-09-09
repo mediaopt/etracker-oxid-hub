@@ -1,3 +1,6 @@
+== 2.1.8 ==
+* module version will be tracked
+
 == 2.1.7 ==
 * language files in UTF-8
 
