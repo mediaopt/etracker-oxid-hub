@@ -1,3 +1,6 @@
+== 2.1.9 ==
+* new script data attribute block-cookies
+
 == 2.1.8 ==
 * module version will be tracked
 
