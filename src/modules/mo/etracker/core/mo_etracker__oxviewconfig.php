@@ -44,8 +44,6 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         $etrackerVars = array();
         $etrackerVars['et_pagename'] = $this->mo_etracker__getPageName();
         $etrackerVars['et_areas'] = $this->mo_etracker__getAreas();
-        $etrackerVars['et_url'] = $this->mo_etracker__getUrl();
-        $etrackerVars['et_target'] = $this->mo_etracker__getTarget();
         $etrackerVars['et_se'] = oxRegistry::getConfig()->getConfigParam('mo_etracker__sechannel');
         $etrackerVars = $main->escapeValues($etrackerVars);
         $etrackerVars['et_tag'] = 'language=' . $this->mo_etracker__getLanguageAbbr();
@@ -164,65 +162,6 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     }
 
     /**
-     * rewrite urls if method is post
-     *
-     * @return string
-     */
-    protected function mo_etracker__getUrl()
-    {
-        $prefix = $this->getConfig()->isSsl() ? 'https://' : 'http://';
-
-        if (empty($_POST)) {
-            return $prefix . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        } else {
-            $query = array();
-            if (!empty($_POST['cl'])) {
-                $query['cl'] = $_POST['cl'];
-            }
-            if (!empty($_POST['fnc'])) {
-                $query['fnc'] = $_POST['fnc'];
-            }
-
-            return $prefix . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . http_build_query($query);
-        }
-    }
-
-    /**
-     * build target path
-     *
-     * @return string
-     */
-    protected function mo_etracker__getTarget()
-    {
-        $target = '';
-
-        $checkoutStep = $this->mo_etracker__getCheckoutStep();
-        //checkout-target chain
-        if ($checkoutStep !== false) {
-            $target .= $this->mo_etracker__getRoot(true);
-            $target .= $this->mo_etracker__getCheckoutTargetChain($checkoutStep);
-        }
-        return $target;
-    }
-
-    /**
-     * build target path in checkout-area
-     *
-     * @param $checkoutstep
-     * @return string
-     */
-    protected function mo_etracker__getCheckoutTargetChain($checkoutStep)
-    {
-        $target = '';
-        for ($i = 0; $i <= $checkoutStep; $i++) {
-            //replace target-separator with "-"
-            $target .= \oxRegistry::get('mo_etracker__main')->translate($this->mo_etracker__checkOutViews[$i]) . '/';
-        }
-        $target = rtrim($target, '/');
-        return $target;
-    }
-
-    /**
      * check if in checkout-area and return checkoutstep
      *
      * @return mixed
@@ -235,63 +174,6 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             }
         }
         return false;
-    }
-
-    /**
-     * return product netto prices
-     *
-     * @return float
-     */
-    protected function mo_etracker__getTval()
-    {
-        return $this->basket->getNettoSum();
-    }
-
-    /**
-     * return order-number
-     *
-     * @return string
-     */
-    protected function mo_etracker__getTonr()
-    {
-        return $this->order->oxorder__oxordernr->value;
-    }
-
-    /**
-     * return sale-flag
-     *
-     * @return unknown
-     */
-    protected function mo_etracker__getTsale()
-    {
-        return 1;
-    }
-
-    /**
-     * check if user has ordered sth before
-     *
-     * @return int
-     */
-    protected function mo_etracker__getCust()
-    {
-        $database = oxDb::getDb();
-
-        //try via ID
-        $sql = "SELECT IF(COUNT(oxid) > 1, 1, 0) as isKnownCustomer
-            FROM oxorder
-            WHERE
-            oxuserid = " . $database->quote($this->order->oxorder__oxuserid->value);
-
-        if ($database->getOne($sql)) {
-            return 1;
-        }
-
-        //retry with email
-        $sql = "SELECT IF(COUNT(oxid) > 1, 1, 0) as isKnownCustomer
-              FROM oxorder
-              WHERE
-              oxbillemail = " . $database->quote($this->order->oxorder__oxbillemail->value);
-        return $database->getOne($sql);
     }
 
     /**
@@ -452,16 +334,6 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     {
         $myConfig = $this->getConfig();
         return get_class($myConfig->getActiveView()) == 'oxUBase';
-    }
-
-    /**
-     * Returns true iff events have been queued.
-     *
-     * @return bool
-     */
-    public function mo_etracker__areEventsQueued()
-    {
-        return \oxRegistry::get('mo_etracker__main')->hasEvents();
     }
 
     /**

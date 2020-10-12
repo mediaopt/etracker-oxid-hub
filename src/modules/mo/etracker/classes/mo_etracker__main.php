@@ -145,22 +145,6 @@ class mo_etracker__main
     }
 
     /**
-     * Returns true iff events have been queued.
-     *
-     * If there are events in the queue, we return true.
-     * If there are no events in the queue because takeEvents was called, we return return.
-     * Otherwise, we return false.
-     *
-     * @return bool
-     */
-    public function hasEvents()
-    {
-        $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
-        $this->eventsQueued |= !empty($eventQueue);
-        return $this->eventsQueued;
-    }
-
-    /**
      * @param mo_etracker__event $event
      * @return $this
      */
