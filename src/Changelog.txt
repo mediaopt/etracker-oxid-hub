@@ -1,3 +1,6 @@
+== 2.1.10 ==
+* delete unused et_url and et_target
+
 == 2.1.9 ==
 * new script data attribute block-cookies
 
