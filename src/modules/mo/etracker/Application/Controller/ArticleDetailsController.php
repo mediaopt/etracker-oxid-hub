@@ -1,4 +1,9 @@
 <?php
+
+namespace Mediaopt\Etracker\Application\Controller;
+
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -12,7 +17,7 @@
  * @package Mediaopt\Etracker
  * @extend Details
  */
-class articleDetailsController extends mo_etracker__details_parent
+class ArticleDetailsController extends ArticleDetailsController_parent
 {
 
     /**
@@ -21,12 +26,8 @@ class articleDetailsController extends mo_etracker__details_parent
      */
     public function render()
     {
-        $event = \oxNew(
-            'productViewedEvent',
-            $this->getProduct(),
-            \oxRegistry::getSession()->getBasket()->mo_etracker__getBasketId()
-        );
-        \oxRegistry::get('main')->trigger($event);
+        $event = oxNew(\Mediaopt\Etracker\Event\ProductViewedEvent::class, $this->getProduct(), Registry::getSession()->getBasket()->mo_etracker__getBasketId());
+        Registry::get(\Mediaopt\Etracker\Main::class)->trigger($event);
         return parent::render();
     }
 }

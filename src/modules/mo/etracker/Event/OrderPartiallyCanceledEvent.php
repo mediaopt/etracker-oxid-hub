@@ -1,4 +1,11 @@
 <?php
+
+namespace Mediaopt\Etracker\Event;
+
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\OrderArticle;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -12,7 +19,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class orderPartiallyCanceledEvent implements event
+class OrderPartiallyCanceledEvent implements \Mediaopt\Etracker\Event
 {
 
     /**
@@ -21,34 +28,32 @@ class orderPartiallyCanceledEvent implements event
     protected $orderNumber = '';
 
     /**
-     * @see converter::fromBasketItem
      * @var array
      */
-    protected $cancelledProducts = [];
+    protected array $cancelledProducts = [];
 
     /**
-     * @param oxOrder $order
-     * @param oxOrderArticle $orderArticle
+     * @param Order $order
+     * @param OrderArticle $orderArticle
      */
-    public function __construct(\oxOrder $order, \oxOrderArticle $orderArticle)
+    public function __construct(Order $order, OrderArticle $orderArticle)
     {
         $this->orderNumber = $order->oxorder__oxordernr->value;
-        $this->cancelledProducts = [\oxRegistry::get('converter')->fromOrderArticle($orderArticle)];
+        $this->cancelledProducts = [Registry::get(\Mediaopt\Etracker\Converter::class)->fromOrderArticle($orderArticle)];
     }
 
     /**
      * @return string
      */
-    public function getEventName()
+    public function getEventName(): string
     {
         return 'orderPartialCancellation';
     }
 
     /**
      * @return array
-     *@see event::getParameters()
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return [$this->orderNumber, $this->cancelledProducts];
     }

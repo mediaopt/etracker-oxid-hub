@@ -1,4 +1,10 @@
 <?php
+
+namespace Mediaopt\Etracker;
+
+use Exception;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -11,7 +17,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class install
+class Install
 {
 
     /**
@@ -38,7 +44,7 @@ class install
     protected static function addColumn($table, $column, $type)
     {
         try {
-            \oxDb::getDb()->execute("ALTER TABLE $table ADD COLUMN $column $type;");
+            \OxidEsales\EshopCommunity\Internal\Container\ContainerFactory::getInstance()->getContainer()->get(\OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface::class)->create()->getConnection()->executeQuery("ALTER TABLE {$table} ADD COLUMN {$column} {$type};");
             return 1;
         } catch (Exception $ex) {
             if ($ex->getCode() !== 1060) {
@@ -54,7 +60,7 @@ class install
     protected static function cleanUp()
     {
         foreach (['*', 'smarty/*'] as $pattern) {
-            foreach (glob(\oxRegistry::getConfig()->getConfigParam('sCompileDir') . $pattern) as $pathToFile) {
+            foreach (glob(Registry::getConfig()->getConfigParam('sCompileDir') . $pattern) as $pathToFile) {
                 if (is_file($pathToFile)) {
                     unlink($pathToFile);
                 }
@@ -67,12 +73,12 @@ class install
      */
     protected static function getFunctionsFile()
     {
-        return \oxRegistry::getConfig()->getModulesDir() . '/functions.php';
+        return Registry::getConfig()->getModulesDir() . '/functions.php';
     }
 
 
     /**
-     * Returns true iff the module can be installed.
+     * Returns true if the module can be installed.
      *
      * @return bool
      */
@@ -88,7 +94,7 @@ class install
         }
 
         foreach ($issues as $issue) {
-            \oxRegistry::get('oxutilsview')->addErrorToDisplay($issue);
+            Registry::get(\OxidEsales\Eshop\Core\UtilsView::class)->addErrorToDisplay($issue);
         }
 
         return empty($issues);
@@ -97,7 +103,7 @@ class install
     /**
      * Adds the bootstrap loader.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public static function onActivate()
     {
@@ -107,7 +113,7 @@ class install
 
         static::addBootstrapLoader();
         if (static::addColumn('oxcategories', 'mo_etracker__name', 'VARCHAR(50) NOT NULL DEFAULT ""')) {
-            \oxNew('oxDbMetaDataHandler')->updateViews();
+            oxNew(\OxidEsales\Eshop\Core\DbMetaDataHandler::class)->updateViews();
         }
         static::cleanUp();
     }
@@ -117,9 +123,7 @@ class install
      */
     protected static function addBootstrapLoader()
     {
-        $lines = file_exists(static::getFunctionsFile())
-            ? file(static::getFunctionsFile(), FILE_IGNORE_NEW_LINES)
-            : ['<?php'];
+        $lines = file_exists(static::getFunctionsFile()) ? file(static::getFunctionsFile(), FILE_IGNORE_NEW_LINES) : ['<?php'];
         $bootstrapLoader = static::getBootstrapLoaderStatement();
 
         if (in_array($bootstrapLoader, $lines, true) !== false) {
@@ -149,7 +153,7 @@ class install
         }
 
         foreach ($issues as $issue) {
-            \oxRegistry::get('oxutilsview')->addErrorToDisplay($issue);
+            Registry::get(\OxidEsales\Eshop\Core\UtilsView::class)->addErrorToDisplay($issue);
         }
 
         return empty($issues);
@@ -184,5 +188,4 @@ class install
         }
         file_put_contents(static::getFunctionsFile(), implode(PHP_EOL, $lines));
     }
-
 }

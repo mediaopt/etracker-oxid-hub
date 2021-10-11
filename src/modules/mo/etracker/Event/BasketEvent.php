@@ -1,4 +1,11 @@
 <?php
+
+namespace Mediaopt\Etracker\Event;
+
+use Mediaopt\Etracker\Converter;
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -11,12 +18,11 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class basketEvent
+class BasketEvent
 {
 
     /**
-     * @see converter::fromArticle
-     * @var stdClass
+     * @see mo_etracker__converter::fromArticle
      */
     protected $product = null;
 
@@ -34,13 +40,13 @@ class basketEvent
 
     /**
      * mo_etracker__basketFilledEvent constructor.
-     * @param oxArticle $article
+     * @param Article $article
      * @param int $amount
      * @param string $pageName
      */
-    public function __construct(\oxArticle $article, $amount, $pageName = '')
+    public function __construct(Article $article, $amount, $pageName = '')
     {
-        $this->product = \oxRegistry::get('converter')->fromArticle($article);
+        $this->product = Registry::get(Converter::class)->fromArticle($article);
         $this->quantity = $amount;
         $this->pageName = $pageName;
     }
@@ -48,7 +54,7 @@ class basketEvent
     /**
      * @return array
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         $parameters = [$this->product, $this->quantity];
         if (!empty($this->pageName)) {
@@ -56,5 +62,4 @@ class basketEvent
         }
         return $parameters;
     }
-
 }

@@ -1,4 +1,13 @@
 <?php
+
+namespace Mediaopt\Etracker\Application\Model;
+
+use Mediaopt\Etracker\Event\NoticelistEmptiedEvent;
+use Mediaopt\Etracker\Event\NoticelistFilledEvent;
+use Mediaopt\Etracker\Main;
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -12,23 +21,21 @@
  * @package Mediaopt\Etracker
  * @extend oxUserBasket
  */
-class order extends mo_etracker__oxuserbasket_parent
+class UserBasket extends UserBasket_parent
 {
 
     /**
-     *
-     *
      * @extend
      *
-     * @param string $productId        Article ID
-     * @param double $amount           Product amount
-     * @param array  $selectionList    product select lists
-     * @param bool   $isOverride       if true overrides $dAmount, else sums previous with current it
-     * @param array  $persistentParams product persistent parameters (default null)
+     * @param string|null $productId Article ID
+     * @param float|null $amount Product amount
+     * @param array|null $selectionList product select lists
+     * @param bool $isOverride if true overrides $dAmount, else sums previous with current it
+     * @param array|null $persistentParams product persistent parameters (default null)
      *
-     * @return integer
+     * @return int
      */
-    public function addItemToBasket($productId = null, $amount = null, $selectionList = null, $isOverride = false, $persistentParams = null)
+    public function addItemToBasket(string $productId = null, float $amount = null, array $selectionList = null, bool $isOverride, array $persistentParams = null): int
     {
         if ($this->oxuserbaskets__oxtitle->value !== 'noticelist') {
             return parent::addItemToBasket($productId, $amount, $selectionList, $isOverride, $persistentParams);
@@ -44,27 +51,27 @@ class order extends mo_etracker__oxuserbasket_parent
 
         $currentAmount = $basketItem->oxuserbasketitems__oxamount->value;
 
-        $event = $this->mo_etracker__generateEvent($basketItem->getArticle($this->_getItemKey($productId, $selectionList, $persistentParams)), ($amount === 0.0 || $amount === 0) ? -$previousAmount : $currentAmount - $previousAmount);
+        $event = $this->mo_etracker__generateEvent($basketItem->getArticle($this->_getItemKey($productId, $selectionList, $persistentParams)), $amount === 0.0 || $amount === 0 ? -$previousAmount : $currentAmount - $previousAmount);
         if (!is_null($event)) {
-            \oxRegistry::get('main')->trigger($event);
+            Registry::get(Main::class)->trigger($event);
         }
 
         return $addedAmount;
     }
 
     /**
-     * @param \oxArticle    $article
-     * @param int           $amountDelta
+     * @param Article $article
+     * @param int $amountDelta
      *
-     * @return noticeListFilledEvent|noticeListEmptiedEvent|null
+     * @return NoticelistFilledEvent|NoticelistEmptiedEvent|null
      */
-    protected function mo_etracker__generateEvent($article, $amountDelta)
+    protected function mo_etracker__generateEvent(Article $article, int $amountDelta)
     {
         if ($amountDelta > 0) {
-            return \oxNew('noticeListFilledEvent', $article, $amountDelta);
+            return oxNew(NoticelistFilledEvent::class, $article, $amountDelta);
         }
         if ($amountDelta < 0) {
-            return \oxNew('noticeListEmptiedEvent', $article, -$amountDelta);
+            return oxNew(NoticelistEmptiedEvent::class, $article, -$amountDelta);
         }
 
         return null;

@@ -1,4 +1,22 @@
 <?php
+
+namespace Mediaopt\Etracker;
+
+use Mediaopt\Etracker\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Application\Model\BasketItem;
+use OxidEsales\Eshop\Application\Model\Discount;
+use OxidEsales\Eshop\Application\Model\DiscountList;
+use OxidEsales\Eshop\Application\Model\Manufacturer;
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\OrderArticle;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Application\Model\Voucher;
+use OxidEsales\Eshop\Application\Model\Wrapping;
+use OxidEsales\Eshop\Core\Registry;
+use stdClass;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -11,7 +29,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class converter
+class Converter
 {
 
     /**
@@ -23,7 +41,7 @@ class converter
     {
         foreach ($object as $property => $value) {
             if (empty($value)) {
-                unset($object->$property);
+                unset($object->{$property});
             }
         }
     }
@@ -36,10 +54,10 @@ class converter
      *
      * If more than four categories are available, only the last four will be returned.
      *
-     * @param oxArticle $article
+     * @param Article $article
      * @return string[]
      */
-    protected function getCategories(\oxArticle $article)
+    protected function getCategories(Article $article)
     {
         $categories = [];
         $etrackerCategories = [];
@@ -56,10 +74,10 @@ class converter
     /**
      * Returns variant information about an article.
      *
-     * @param oxArticle $product
+     * @param Article $product
      * @return stdClass
      */
-    protected function getVariant(\oxArticle $product)
+    protected function getVariant(Article $product)
     {
         $variants = new stdClass();
         if (!$product->isVariant()) {
@@ -71,10 +89,10 @@ class converter
     }
 
     /**
-     * @param oxArticle $product
+     * @param Article $product
      * @return string[]
      */
-    protected function extractVariants(\oxArticle $product)
+    protected function extractVariants(Article $product)
     {
         // The | is magic, but this should not pose any problem.
         $names = explode('|', $product->getParentArticle()->oxarticles__oxvarname);
@@ -90,22 +108,22 @@ class converter
     }
 
     /**
-     * @param oxArticle $article
+     * @param Article $article
      * @param stdClass $etrackerProduct
      */
-    protected function enrichProductWithManufacturer(\oxArticle $article, stdClass $etrackerProduct)
+    protected function enrichProductWithManufacturer(Article $article, stdClass $etrackerProduct)
     {
         $manufacturer = $article->getManufacturer();
-        if ($manufacturer instanceof oxManufacturer) {
+        if ($manufacturer instanceof Manufacturer) {
             $etrackerProduct->pro_name = $manufacturer->getTitle();
         }
     }
 
     /**
-     * @param oxArticle $article
+     * @param Article $article
      * @param stdClass $etrackerProduct
      */
-    protected function enrichProductWithEAN(\oxArticle $article, stdClass $etrackerProduct)
+    protected function enrichProductWithEAN(Article $article, stdClass $etrackerProduct)
     {
         if (!empty($article->oxarticles__oxean->value)) {
             $etrackerProduct->ean = $article->oxarticles__oxean->value;
@@ -113,10 +131,10 @@ class converter
     }
 
     /**
-     * @param \oxArticle $article
+     * @param Article $article
      * @param stdClass $etrackerProduct
      */
-    protected function enrichProduct(\oxArticle $article, stdClass $etrackerProduct)
+    protected function enrichProduct(Article $article, stdClass $etrackerProduct)
     {
         $this->enrichProductWithManufacturer($article, $etrackerProduct);
         $this->enrichProductWithEAN($article, $etrackerProduct);
@@ -125,7 +143,7 @@ class converter
     /**
      * Determines the product id to be used for a product.
      *
-     * @param \oxArticle|\oxOrderArticle $article
+     * @param Article|OrderArticle $article
      * @return string
      */
     protected function determineProductId($article)
@@ -139,13 +157,13 @@ class converter
     /**
      * Returns a product containing the information about the supplied article.
      *
-     * @param \oxArticle|\oxOrderArticle $article
+     * @param Article|OrderArticle $article
      * @return stdClass
      */
     public function fromArticle($article)
     {
-        if ($article instanceof oxOrderArticle) {
-            $actualArticle = \oxNew('oxArticle');
+        if ($article instanceof OrderArticle) {
+            $actualArticle = oxNew(Article::class);
             $actualArticle->load($article->oxorderarticles__oxartid->value);
             return $this->fromArticle($actualArticle);
         }
@@ -154,8 +172,9 @@ class converter
         $etrackerProduct->id = $this->determineProductId($article);
         $etrackerProduct->name = $article->oxarticles__oxtitle->value;
         $etrackerProduct->category = $this->getCategories($article);
-        $etrackerProduct->price = (string)$article->getPrice()->getPrice(); // TODO: gross/net price?
-        $etrackerProduct->currency = \oxRegistry::getConfig()->getActShopCurrencyObject()->name;
+        $etrackerProduct->price = (string)$article->getPrice()->getPrice();
+        // TODO: gross/net price?
+        $etrackerProduct->currency = Registry::getConfig()->getActShopCurrencyObject()->name;
         $etrackerProduct->variants = $this->getVariant($article);
         $this->enrichProduct($article, $etrackerProduct);
         return $etrackerProduct;
@@ -164,10 +183,10 @@ class converter
     /**
      * Returns a basket item containing the information of the supploed basket item.
      *
-     * @param \oxBasketItem $basketItem
+     * @param BasketItem $basketItem
      * @return stdClass
      */
-    public function fromBasketItem(\oxBasketItem $basketItem)
+    public function fromBasketItem(BasketItem $basketItem)
     {
         $etrackerBasketItem = new stdClass();
         $etrackerBasketItem->product = $this->fromArticle($basketItem->getArticle());
@@ -178,10 +197,10 @@ class converter
     /**
      * Returns a basket item containing the information of the supplied order article.
      *
-     * @param oxOrderArticle $orderArticle
+     * @param OrderArticle $orderArticle
      * @return stdClass
      */
-    public function fromOrderArticle(\oxOrderArticle $orderArticle)
+    public function fromOrderArticle(OrderArticle $orderArticle)
     {
         $etrackerBasketItem = new stdClass();
         $etrackerBasketItem->product = $this->fromArticle($orderArticle);
@@ -192,19 +211,18 @@ class converter
     /**
      * Returns a basket item containing the information about the supplied wrapping.
      *
-     * @param oxWrapping $wrapping
+     * @param Wrapping $wrapping
      * @return stdClass
      */
-    protected function fromWrapping(\oxWrapping $wrapping)
+    protected function fromWrapping(Wrapping $wrapping)
     {
         $etrackerBasketItem = new stdClass();
         $etrackerBasketItem->product = new stdClass();
         $etrackerBasketItem->product->id = $wrapping->getId();
         $etrackerBasketItem->product->name = $wrapping->oxwrapping__oxname->value;
-        $etrackerBasketItem->product->category = strcasecmp($wrapping->oxwrapping__oxtype->value, 'WRAP') === 0
-            ? ['Wrapping'] : ['Gift Card'];
+        $etrackerBasketItem->product->category = strcasecmp($wrapping->oxwrapping__oxtype->value, 'WRAP') === 0 ? ['Wrapping'] : ['Gift Card'];
         $etrackerBasketItem->product->price = (string)$wrapping->getPrice();
-        $etrackerBasketItem->product->currency = \oxRegistry::getConfig()->getActShopCurrencyObject()->name;
+        $etrackerBasketItem->product->currency = Registry::getConfig()->getActShopCurrencyObject()->name;
         $etrackerBasketItem->product->variants = new stdClass();
         $etrackerBasketItem->quantity = 1;
         return $etrackerBasketItem;
@@ -213,14 +231,14 @@ class converter
     /**
      * Returns the vouchers (as basket item) used in the supplied basket.
      *
-     * @param basket $basket
+     * @param Basket $basket
      * @return stdClass[]
      */
-    protected function getVouchers(\basket $basket)
+    protected function getVouchers(Basket $basket)
     {
         $products = [];
         foreach ($basket->getVouchers() as $voucherObject) {
-            $voucher = \oxNew('oxVoucher');
+            $voucher = oxNew(Voucher::class);
             $voucher->load($voucherObject->sVoucherId);
             $etrackerBasketItem = new stdClass();
             $etrackerBasketItem->product = new stdClass();
@@ -228,7 +246,7 @@ class converter
             $etrackerBasketItem->product->name = $voucher->getSerie()->oxvoucherseries__oxserienr->value;
             $etrackerBasketItem->product->category = ['Voucher'];
             $etrackerBasketItem->product->price = '-' . $voucherObject->dVoucherdiscount;
-            $etrackerBasketItem->product->currency = \oxRegistry::getConfig()->getActShopCurrencyObject()->name;
+            $etrackerBasketItem->product->currency = Registry::getConfig()->getActShopCurrencyObject()->name;
             $etrackerBasketItem->product->variants = new stdClass();
             $etrackerBasketItem->quantity = 1;
             $products[] = $etrackerBasketItem;
@@ -239,10 +257,10 @@ class converter
     /**
      * Returns the discounts (as basket item) of the supplied basket.
      *
-     * @param basket $basket
+     * @param Basket $basket
      * @return stdClass[]
      */
-    protected function getDiscountsFromBasket(\basket $basket)
+    protected function getDiscountsFromBasket(Basket $basket)
     {
         $products = [];
         foreach ((array)$basket->getDiscounts() as $discount) {
@@ -252,7 +270,7 @@ class converter
             $etrackerBasketItem->product->name = $discount->sDiscount;
             $etrackerBasketItem->product->category = ['Discount', 'Basket'];
             $etrackerBasketItem->product->price = '-' . $discount->dDiscount;
-            $etrackerBasketItem->product->currency = \oxRegistry::getConfig()->getActShopCurrencyObject()->name;
+            $etrackerBasketItem->product->currency = Registry::getConfig()->getActShopCurrencyObject()->name;
             $etrackerBasketItem->product->variants = new stdClass();
             $etrackerBasketItem->quantity = 1;
             $products[] = $etrackerBasketItem;
@@ -263,17 +281,17 @@ class converter
     /**
      * Returns the discounts (as basket item) of the supplied basket item.
      *
-     * @param basket $basket
-     * @param oxBasketItem $basketItem
+     * @param Basket $basket
+     * @param BasketItem $basketItem
      * @return stdClass[]
      */
-    protected function getDiscountsFromBasketItem(\basket $basket, \oxBasketItem $basketItem)
+    protected function getDiscountsFromBasketItem(Basket $basket, BasketItem $basketItem)
     {
         $initialPrice = $basketItem->getArticle()->getPrice();
         $previousPrice = $initialPrice->getPrice();
         $products = [];
-        foreach (\oxNew('oxDiscountList')->getBasketItemDiscounts($basketItem->getArticle(), $basket) as $discount) {
-            /** @var \oxDiscount $discount */
+        foreach (oxNew(DiscountList::class)->getBasketItemDiscounts($basketItem->getArticle(), $basket) as $discount) {
+            /** @var Discount $discount */
             $initialPrice->setDiscount($discount->getAddSum(), $discount->getAddSumType());
             $currentPrice = clone $initialPrice;
             $currentPrice->calculateDiscount();
@@ -286,7 +304,7 @@ class converter
             $etrackerBasketItem->product->name = $discount->oxdiscount__oxtitle->value;
             $etrackerBasketItem->product->category = ['Discount', 'Article'];
             $etrackerBasketItem->product->price = '-' . $discountedValue;
-            $etrackerBasketItem->product->currency = \oxRegistry::getConfig()->getActShopCurrencyObject()->name;
+            $etrackerBasketItem->product->currency = Registry::getConfig()->getActShopCurrencyObject()->name;
             $etrackerBasketItem->product->variants = new stdClass();
             $etrackerBasketItem->quantity = 1;
             $products[] = $etrackerBasketItem;
@@ -297,18 +315,18 @@ class converter
     /**
      * Returns the items of a basket.
      *
-     * @param basket $basket
+     * @param Basket $basket
      * @return stdClass[]
      */
-    protected function getBasketItems(\basket $basket)
+    protected function getBasketItems(Basket $basket)
     {
         $products = [];
         foreach ($basket->getContents() as $basketItem) {
             $wrapping = null;
-            if ($basketItem instanceof \oxOrderArticle) {
+            if ($basketItem instanceof OrderArticle) {
                 $products[] = $this->fromOrderArticle($basketItem);
                 $wrapping = $basketItem->getWrapping();
-            } elseif ($basketItem instanceof \oxBasketItem) {
+            } elseif ($basketItem instanceof BasketItem) {
                 $products[] = $this->fromBasketItem($basketItem);
                 $wrapping = $basketItem->getWrapping();
                 $products = array_merge($products, $this->getDiscountsFromBasketItem($basket, $basketItem));
@@ -324,10 +342,10 @@ class converter
     }
 
     /**
-     * @param \basket $basket
+     * @param Basket $basket
      * @return stdClass
      */
-    public function fromBasket(\basket $basket)
+    public function fromBasket(Basket $basket)
     {
         $etrackerBasket = new stdClass();
         $etrackerBasket->id = $basket->mo_etracker__getBasketId();
@@ -336,16 +354,16 @@ class converter
     }
 
     /**
-     * @param \oxOrder $order
+     * @param Order $order
      * @return 'lead'|'sale'|'cancellation'|'partial_cancellation'
      */
-    protected function determineOrderStatus(\oxOrder $order)
+    protected function determineOrderStatus(Order $order)
     {
         if ($order->oxorder__oxstorno->value == 1) {
             return 'cancellation';
         }
         foreach ($order->getOrderArticles() as $article) {
-            /** @var oxOrderArticle $article */
+            /** @var OrderArticle $article */
             if ($article->oxorderarticles__oxstorno->value == 1) {
                 return 'partial_cancellation';
             }
@@ -358,37 +376,31 @@ class converter
     /**
      * Returns an array containing country, [state], city.
      *
-     * @param oxOrder $order
+     * @param Order $order
      * @return string[]
      */
-    protected function getCustomerInformation(\oxOrder $order)
+    protected function getCustomerInformation(Order $order)
     {
-        /** @var oxAddress $deliveryAddress */
+        /** @var Address $deliveryAddress */
         $deliveryAddress = $order->getDelAddressInfo();
         if (is_null($deliveryAddress)) {
             return $this->getInvoiceInformation($order);
         }
 
-        return array_filter(
-            [
-                $order->getDelCountry(),
-                $deliveryAddress->getStateTitle(),
-                $deliveryAddress->oxaddress__oxcity->value
-            ]
-        );
+        return array_filter([$order->getDelCountry(), $deliveryAddress->getStateTitle(), $deliveryAddress->oxaddress__oxcity->value]);
     }
 
     /**
      * Returns an array containing country, [state], city.
      *
-     * @param oxOrder $order
+     * @param Order $order
      * @return string[]
      */
-    protected function getInvoiceInformation(\oxOrder $order)
+    protected function getInvoiceInformation(Order $order)
     {
         $invoiceInformation = [$order->getBillCountry()];
         if (!empty($order->oxorder__oxbillstateid->value)) {
-            $invoiceInformation[] = \oxNew('oxAddress')->getStateTitle($order->oxorder__oxbillstateid->value);
+            $invoiceInformation[] = oxNew(Address::class)->getStateTitle($order->oxorder__oxbillstateid->value);
         }
         $invoiceInformation[] = $order->oxorder__oxbillcity->value;
         return $invoiceInformation;
@@ -397,14 +409,14 @@ class converter
     /**
      * Returns the product id of each basket item that is wrapped.
      *
-     * @param basket $basket
+     * @param Basket $basket
      * @return string[]
      */
-    protected function getWrappedProductIds(\basket $basket)
+    protected function getWrappedProductIds(Basket $basket)
     {
         $productIds = [];
         foreach ($basket->getContents() as $basketItem) {
-            /** @var \oxBasketItem $basketItem */
+            /** @var BasketItem $basketItem */
             if (is_null($basketItem->getWrapping())) {
                 continue;
             }
@@ -416,10 +428,10 @@ class converter
     /**
      * Returns the customer group; for now it returns a comma-separated list of each of the user's groups.
      *
-     * @param oxUser $user
+     * @param User $user
      * @return string
      */
-    protected function getCustomerGroup(\oxUser $user)
+    protected function getCustomerGroup(User $user)
     {
         $names = [];
         foreach ($user->getUserGroups() as $group) {
@@ -435,19 +447,14 @@ class converter
      * It also considers the length of the coupon codes. If comma-separated list of the coupon codes exceeds 50,
      * then a sublist of coupon codes with at most 50 characters is returned.
      *
-     * @param \basket $basket
+     * @param Basket $basket
      * @return string
      */
-    protected function getCouponCodes(\basket $basket)
+    protected function getCouponCodes(Basket $basket)
     {
-        $couponCodes = implode(
-            ',', array_map(
-                   function ($voucher) {
-                       return $voucher->sVoucherNr;
-                   }, $basket->getVouchers()
-               )
-        );
-
+        $couponCodes = implode(',', array_map(function ($voucher) {
+            return $voucher->sVoucherNr;
+        }, $basket->getVouchers()));
         if (strlen($couponCodes) <= 50) {
             return $couponCodes;
         }
@@ -458,15 +465,12 @@ class converter
     /**
      * Enriches the order with optional information.
      *
-     * @param oxOrder $order
-     * @param basket $basket
+     * @param Order $order
+     * @param Basket $basket
      * @param stdClass $etrackerOrder
      */
-    protected function enrichOrderWithOptionalInformation(
-        \oxOrder $order,
-        \basket  $basket,
-        stdClass $etrackerOrder
-    ) {
+    protected function enrichOrderWithOptionalInformation(Order $order, Basket $basket, stdClass $etrackerOrder)
+    {
         $etrackerOrder->customerId = $order->getOrderUser()->getId();
         $etrackerOrder->customerGroup = $this->getCustomerGroup($order->getOrderUser());
         $etrackerOrder->customerAddress = implode(',', $this->getCustomerInformation($order));
@@ -480,22 +484,23 @@ class converter
     }
 
     /**
-     * @param \oxOrder $order
-     * @param \basket $basket
+     * @param Order $order
+     * @param Basket $basket
      * @return stdClass
      */
-    public function fromOrder(\oxOrder $order, \basket $basket)
+    public function fromOrder(Order $order, Basket $basket)
     {
         $etrackerOrder = new stdClass();
         $etrackerOrder->orderNumber = (string)$order->oxorder__oxordernr->value;
         $etrackerOrder->status = $this->determineOrderStatus($order);
-        $etrackerOrder->orderPrice = (string)$order->oxorder__oxtotalordersum->value; // TODO: gross/net price?
+        $etrackerOrder->orderPrice = (string)$order->oxorder__oxtotalordersum->value;
+        // TODO: gross/net price?
         $etrackerOrder->currency = $order->oxorder__oxcurrency->value;
         $etrackerOrder->basket = $this->fromBasket($basket);
-        $etrackerOrder->differenceData = (int)true; // We always transmit the entire basket.
+        $etrackerOrder->differenceData = (int)true;
+        // We always transmit the entire basket.
         $this->enrichOrderWithOptionalInformation($order, $basket, $etrackerOrder);
         $this->removeEmptyProperties($etrackerOrder);
         return $etrackerOrder;
     }
-
 }

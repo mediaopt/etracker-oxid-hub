@@ -1,4 +1,9 @@
 <?php
+
+namespace Mediaopt\Etracker\Event;
+
+use OxidEsales\Eshop\Application\Model\Order;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -12,7 +17,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class orderConfirmedEvent implements event
+class OrderConfirmedEvent implements \Mediaopt\Etracker\Event
 {
 
     /**
@@ -21,9 +26,9 @@ class orderConfirmedEvent implements event
     protected $orderNumber = '';
 
     /**
-     * @param oxOrder $order
+     * @param Order $order
      */
-    public function __construct(\oxOrder $order)
+    public function __construct(Order $order)
     {
         $this->orderNumber = (string)$order->oxorder__oxordernr->value;
     }
@@ -31,19 +36,17 @@ class orderConfirmedEvent implements event
     /**
      * @return string
      */
-    public function getEventName()
+    public function getEventName(): string
     {
         return 'orderConfirmation';
     }
 
     /**
      * @return array
-     *@see event::getParameters()
+     * @see mo_etracker__event::getParameters()
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return [$this->orderNumber];
     }
-
-
 }

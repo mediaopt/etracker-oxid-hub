@@ -1,4 +1,10 @@
 <?php
+
+namespace Mediaopt\Etracker\Application\Model;
+
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -12,7 +18,7 @@
  * @package Mediaopt\Etracker
  * @extend oxOrder
  */
-class order extends mo_etracker__oxorder_parent
+class Order extends Order_parent
 {
 
     /**
@@ -21,24 +27,22 @@ class order extends mo_etracker__oxorder_parent
     public function cancelOrder()
     {
         parent::cancelOrder();
-        \oxRegistry::get('main')->trigger(\oxNew('orderCanceledEvent', $this));
+        Registry::get(\Mediaopt\Etracker\Main::class)->trigger(oxNew(\Mediaopt\Etracker\Event\OrderCanceledEvent::class, $this));
     }
 
     /**
      * @extend
-     * @param oxBasket $basket
+     * @param Basket $basket
      * @param $user
      * @param bool $recalculatingOrder
      * @return int
      */
-    public function finalizeOrder(\oxBasket $basket, $user, $recalculatingOrder = false)
+    public function finalizeOrder(Basket $basket, $user, $recalculatingOrder = false)
     {
         $isNewOrder = empty($this->oxorder__oxordernr->value);
         $status = parent::finalizeOrder($basket, $user, $recalculatingOrder);
-        if ($status === oxOrder::ORDER_STATE_OK && $isNewOrder) {
-            \oxRegistry::get('main')
-                ->trigger(\oxNew('orderCompletedEvent', $this, $basket))
-                ->trigger(\oxNew('orderConfirmedEvent', $this));
+        if ($status === \OxidEsales\Eshop\Application\Model\Order::ORDER_STATE_OK && $isNewOrder) {
+            Registry::get(\Mediaopt\Etracker\Main::class)->trigger(oxNew(\Mediaopt\Etracker\Event\OrderCompletedEvent::class, $this, $basket))->trigger(oxNew(\Mediaopt\Etracker\Event\OrderConfirmedEvent::class, $this));
         }
         return $status;
     }

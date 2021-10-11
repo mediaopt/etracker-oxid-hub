@@ -1,4 +1,13 @@
 <?php
+
+namespace Mediaopt\Etracker\Application\Model;
+
+use Mediaopt\Etracker\Event\BasketEmptiedEvent;
+use Mediaopt\Etracker\Event\BasketFilledEvent;
+use Mediaopt\Etracker\Main;
+use OxidEsales\Eshop\Application\Model\BasketItem;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -14,7 +23,7 @@
  * @package Mediaopt\Etracker
  * @extend oxBasket
  */
-class basket extends mo_etracker__oxbasket_parent
+class Basket extends Basket_parent
 {
 
     /**
@@ -33,50 +42,39 @@ class basket extends mo_etracker__oxbasket_parent
      * @param bool $override
      * @param bool $bundle
      * @param null $oldBasketItemId
-     * @return oxBasketItem
+     * @return BasketItem
      */
-    public function addToBasket(
-        $productId,
-        $amount,
-        $selection = null,
-        $persistentParameters = null,
-        $override = false,
-        $bundle = false,
-        $oldBasketItemId = null
-    ) {
-        $itemId = empty($oldBasketItemId)
-            ? $this->getItemKey($productId, $selection, $persistentParameters, $bundle)
-            : $oldBasketItemId;
+    public function addToBasket($productId, $amount, $selection = null, $persistentParameters = null, $override = false, $bundle = false, $oldBasketItemId = null)
+    {
+        $itemId = empty($oldBasketItemId) ? $this->getItemKey($productId, $selection, $persistentParameters, $bundle) : $oldBasketItemId;
         $previousBasketItem = isset($this->_aBasketContents[$itemId]) ? $this->_aBasketContents[$itemId] : null;
         $previousAmount = is_null($previousBasketItem) ? 0 : $previousBasketItem->getAmount();
 
-        /** @var oxBasketItem $basketItem */
-        $basketItem = parent::addToBasket($productId, $amount, $selection, $persistentParameters, $override, $bundle,
-            $oldBasketItemId);
-
+        /** @var BasketItem $basketItem */
+        $basketItem = parent::addToBasket($productId, $amount, $selection, $persistentParameters, $override, $bundle, $oldBasketItemId);
         assert(!is_null($basketItem) || !is_null($previousBasketItem));
 
         $pertainedBasketItem = is_null($basketItem) ? $previousBasketItem : $basketItem;
         $currentAmount = is_null($basketItem) ? 0 : $basketItem->getAmount();
         $event = $this->mo_etracker__generateEvent($pertainedBasketItem, $currentAmount - $previousAmount);
         if (!is_null($event)) {
-            \oxRegistry::get('main')->trigger($event);
+            Registry::get(Main::class)->trigger($event);
         }
         return $basketItem;
     }
 
     /**
-     * @param \oxBasketItem $basketItem
+     * @param BasketItem $basketItem
      * @param int $amountDelta
-     * @return basketFilledEvent|basketEmptiedEvent
+     * @return BasketFilledEvent|BasketEmptiedEvent
      */
     protected function mo_etracker__generateEvent($basketItem, $amountDelta)
     {
         if ($amountDelta > 0) {
-            return \oxNew('basketFilledEvent', $basketItem->getArticle(), $amountDelta);
+            return oxNew(BasketFilledEvent::class, $basketItem->getArticle(), $amountDelta);
         }
         if ($amountDelta < 0) {
-            return \oxNew('basketEmptiedEvent', $basketItem->getArticle(), -$amountDelta);
+            return oxNew(BasketEmptiedEvent::class, $basketItem->getArticle(), -$amountDelta);
         }
 
         return null;

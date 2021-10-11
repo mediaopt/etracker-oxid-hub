@@ -1,4 +1,11 @@
 <?php
+
+namespace Mediaopt\Etracker\Application\Controller\Admin;
+
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Request;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -10,9 +17,9 @@
  *
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
- * @extend Order_Article
+ * @extend OrderArticle
  */
-class orderArticle extends mo_etracker__order_article_parent
+class OrderArticle extends OrderArticle_parent
 {
 
     /**
@@ -30,18 +37,18 @@ class orderArticle extends mo_etracker__order_article_parent
      */
     public function storno()
     {
-        $orderArticle = \oxNew('oxorderarticle');
-        $orderArticle->load(\oxRegistry::getConfig()->getRequestParameter('sArtID'));
+        $orderArticle = oxNew(\OxidEsales\Eshop\Application\Model\OrderArticle::class);
+        $orderArticle->load(Registry::get(Request::class)->getRequestParameter('sArtID'));
         if ($orderArticle->oxorderarticles__oxstorno->value != 1) {
-            $order = \oxNew('oxOrder');
+            $order = oxNew(Order::class);
             $order->load($orderArticle->oxorderarticles__oxorderid->value);
-            $event = \oxNew('orderPartiallyCanceledEvent', $order, $orderArticle);
+            $event = oxNew(\Mediaopt\Etracker\Event\OrderPartiallyCanceledEvent::class, $order, $orderArticle);
         }
 
         parent::storno();
 
         if (isset($event)) {
-            \oxRegistry::get('main')->trigger($event);
+            Registry::get(\Mediaopt\Etracker\Main::class)->trigger($event);
         }
     }
 }

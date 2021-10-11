@@ -1,4 +1,10 @@
 <?php
+
+namespace Mediaopt\Etracker\Event;
+
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -12,12 +18,12 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class productViewedEvent implements event
+class ProductViewedEvent implements \Mediaopt\Etracker\Event
 {
 
     /**
-     * @see converter::fromArticle()
-     * @var stdClass
+     * @see mo_etracker__converter::fromArticle()
+     * @var \stdClass
      */
     protected $product = null;
 
@@ -36,13 +42,13 @@ class productViewedEvent implements event
     protected $pageName = '';
 
     /**
-     * @param oxArticle $article
+     * @param Article $article
      * @param string $basketId
      * @param string $pageName
      */
-    public function __construct(\oxArticle $article, $basketId = '', $pageName = '')
+    public function __construct(Article $article, $basketId = '', $pageName = '')
     {
-        $this->product = \oxRegistry::get('converter')->fromArticle($article);
+        $this->product = Registry::get(\Mediaopt\Etracker\Converter::class)->fromArticle($article);
         $this->basketId = $basketId;
         $this->pageName = $pageName;
     }
@@ -50,25 +56,23 @@ class productViewedEvent implements event
     /**
      * @return string
      */
-    public function getEventName()
+    public function getEventName(): string
     {
         return 'viewProduct';
     }
 
     /**
      * @return array
-     *@see event::getParameters()
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         $parameters = [$this->product];
-        foreach(['basketId', 'pageName'] as $property) {
-            if(empty($this->$property)) {
+        foreach (['basketId', 'pageName'] as $property) {
+            if (empty($this->{$property})) {
                 break;
             }
-            $parameters[] = $this->$property;
+            $parameters[] = $this->{$property};
         }
         return $parameters;
     }
-
 }
