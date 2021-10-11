@@ -14,7 +14,7 @@
  * @package Mediaopt\Etracker
  * @extend oxBasket
  */
-class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
+class basket extends mo_etracker__oxbasket_parent
 {
 
     /**
@@ -60,7 +60,7 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
         $currentAmount = is_null($basketItem) ? 0 : $basketItem->getAmount();
         $event = $this->mo_etracker__generateEvent($pertainedBasketItem, $currentAmount - $previousAmount);
         if (!is_null($event)) {
-            \oxRegistry::get('mo_etracker__main')->trigger($event);
+            \oxRegistry::get('main')->trigger($event);
         }
         return $basketItem;
     }
@@ -68,15 +68,15 @@ class mo_etracker__oxbasket extends mo_etracker__oxbasket_parent
     /**
      * @param \oxBasketItem $basketItem
      * @param int $amountDelta
-     * @return mo_etracker__basketFilledEvent|mo_etracker__basketEmptiedEvent
+     * @return basketFilledEvent|basketEmptiedEvent
      */
     protected function mo_etracker__generateEvent($basketItem, $amountDelta)
     {
         if ($amountDelta > 0) {
-            return \oxNew('mo_etracker__basketFilledEvent', $basketItem->getArticle(), $amountDelta);
+            return \oxNew('basketFilledEvent', $basketItem->getArticle(), $amountDelta);
         }
         if ($amountDelta < 0) {
-            return \oxNew('mo_etracker__basketEmptiedEvent', $basketItem->getArticle(), -$amountDelta);
+            return \oxNew('basketEmptiedEvent', $basketItem->getArticle(), -$amountDelta);
         }
 
         return null;

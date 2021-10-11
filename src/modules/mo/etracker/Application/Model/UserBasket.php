@@ -12,7 +12,7 @@
  * @package Mediaopt\Etracker
  * @extend oxUserBasket
  */
-class mo_etracker__oxuserbasket extends mo_etracker__oxuserbasket_parent
+class order extends mo_etracker__oxuserbasket_parent
 {
 
     /**
@@ -46,7 +46,7 @@ class mo_etracker__oxuserbasket extends mo_etracker__oxuserbasket_parent
 
         $event = $this->mo_etracker__generateEvent($basketItem->getArticle($this->_getItemKey($productId, $selectionList, $persistentParams)), ($amount === 0.0 || $amount === 0) ? -$previousAmount : $currentAmount - $previousAmount);
         if (!is_null($event)) {
-            \oxRegistry::get('mo_etracker__main')->trigger($event);
+            \oxRegistry::get('main')->trigger($event);
         }
 
         return $addedAmount;
@@ -56,15 +56,15 @@ class mo_etracker__oxuserbasket extends mo_etracker__oxuserbasket_parent
      * @param \oxArticle    $article
      * @param int           $amountDelta
      *
-     * @return mo_etracker__noticelistFilledEvent|mo_etracker__noticelistEmptiedEvent|null
+     * @return noticeListFilledEvent|noticeListEmptiedEvent|null
      */
     protected function mo_etracker__generateEvent($article, $amountDelta)
     {
         if ($amountDelta > 0) {
-            return \oxNew('mo_etracker__noticelistFilledEvent', $article, $amountDelta);
+            return \oxNew('noticeListFilledEvent', $article, $amountDelta);
         }
         if ($amountDelta < 0) {
-            return \oxNew('mo_etracker__noticelistEmptiedEvent', $article, -$amountDelta);
+            return \oxNew('noticeListEmptiedEvent', $article, -$amountDelta);
         }
 
         return null;

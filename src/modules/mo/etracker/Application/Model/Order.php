@@ -12,7 +12,7 @@
  * @package Mediaopt\Etracker
  * @extend oxOrder
  */
-class mo_etracker__oxorder extends mo_etracker__oxorder_parent
+class order extends mo_etracker__oxorder_parent
 {
 
     /**
@@ -21,7 +21,7 @@ class mo_etracker__oxorder extends mo_etracker__oxorder_parent
     public function cancelOrder()
     {
         parent::cancelOrder();
-        \oxRegistry::get('mo_etracker__main')->trigger(\oxNew('mo_etracker__orderCanceledEvent', $this));
+        \oxRegistry::get('main')->trigger(\oxNew('orderCanceledEvent', $this));
     }
 
     /**
@@ -36,9 +36,9 @@ class mo_etracker__oxorder extends mo_etracker__oxorder_parent
         $isNewOrder = empty($this->oxorder__oxordernr->value);
         $status = parent::finalizeOrder($basket, $user, $recalculatingOrder);
         if ($status === oxOrder::ORDER_STATE_OK && $isNewOrder) {
-            \oxRegistry::get('mo_etracker__main')
-                ->trigger(\oxNew('mo_etracker__orderCompletedEvent', $this, $basket))
-                ->trigger(\oxNew('mo_etracker__orderConfirmedEvent', $this));
+            \oxRegistry::get('main')
+                ->trigger(\oxNew('orderCompletedEvent', $this, $basket))
+                ->trigger(\oxNew('orderConfirmedEvent', $this));
         }
         return $status;
     }

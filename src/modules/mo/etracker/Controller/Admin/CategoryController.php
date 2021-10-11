@@ -11,7 +11,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class mo_etracker__category extends \oxAdminDetails
+class categoryController extends \oxAdminDetails
 {
 
     /**

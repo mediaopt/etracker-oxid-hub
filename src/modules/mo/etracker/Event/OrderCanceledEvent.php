@@ -7,12 +7,12 @@
 
 
 /**
- * This event is issued if an order has been confirmed.
+ * This event is issued if an order has been canceled.
  *
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class mo_etracker__orderConfirmedEvent implements mo_etracker__event
+class orderCanceledEvent implements event
 {
 
     /**
@@ -25,7 +25,7 @@ class mo_etracker__orderConfirmedEvent implements mo_etracker__event
      */
     public function __construct(\oxOrder $order)
     {
-        $this->orderNumber = (string)$order->oxorder__oxordernr->value;
+        $this->orderNumber = $order->oxorder__oxordernr->value;
     }
 
     /**
@@ -33,17 +33,16 @@ class mo_etracker__orderConfirmedEvent implements mo_etracker__event
      */
     public function getEventName()
     {
-        return 'orderConfirmation';
+        return 'orderCancellation';
     }
 
     /**
-     * @see mo_etracker__event::getParameters()
      * @return array
+     *@see event::getParameters()
      */
     public function getParameters()
     {
         return [$this->orderNumber];
     }
-
 
 }

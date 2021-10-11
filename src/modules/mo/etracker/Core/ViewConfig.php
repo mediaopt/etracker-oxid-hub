@@ -13,7 +13,7 @@
  * @package Mediaopt\Etracker
  * @extend oxViewConfig
  */
-class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
+class viewConfig extends mo_etracker__oxviewconfig_parent
 {
 
     public $mo_etracker__checkOutViews = array('Basket', 'User', 'Payment', 'Order', 'Thankyou');
@@ -37,7 +37,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             return $this->mo_etracker__vars;
         }
 
-        $main = \oxRegistry::get('mo_etracker__main');
+        $main = \oxRegistry::get('main');
         $this->mo_etracker__view = $this->getConfig()->getActiveView();
         $this->mo_etracker__root = oxRegistry::getConfig()->getConfigParam('mo_etracker__root');
 
@@ -75,7 +75,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     public function mo_etracker__getNoScriptVars($data)
     {
-        return \oxRegistry::get('mo_etracker__main')->serializeData($data);
+        return \oxRegistry::get('main')->serializeData($data);
     }
 
     /**
@@ -90,7 +90,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             return '__INDEX__';
         }
 
-        $main = \oxRegistry::get('mo_etracker__main');
+        $main = \oxRegistry::get('main');
         $uri = $main->processShopUrl($this->getConfig()->getConfigParam('sShopURL')) ?: $_SERVER['REQUEST_URI'];
         $pagename = $this->mo_etracker__handlePageName($uri);
 
@@ -115,7 +115,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             return '404';
         }
 
-        $main = \oxRegistry::get('mo_etracker__main');
+        $main = \oxRegistry::get('main');
 
         if (preg_match('#/([^/]+)?(/|\.html.*)$#', $uri, $matches)) {
             //remove special characters
@@ -149,7 +149,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             $areas .= $path;
 
             //append class name to path
-            $areas .= \oxRegistry::get('mo_etracker__main')->translate($this->getActiveClassName());
+            $areas .= \oxRegistry::get('main')->translate($this->getActiveClassName());
             $areas = rtrim($areas, '/') . ',';
 
             //add root as prefix (//)
@@ -183,7 +183,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function mo_etracker__getBasket()
     {
-        return \oxRegistry::get('mo_etracker__main')->buildBasketString($this->basket);
+        return \oxRegistry::get('main')->buildBasketString($this->basket);
     }
 
     /**
@@ -202,7 +202,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function mo_etracker__getPath()
     {
-        $main = \oxRegistry::get('mo_etracker__main');
+        $main = \oxRegistry::get('main');
 
         //breadcrumb / category-path
         $path = $this->mo_etracker__processPaths();
@@ -244,7 +244,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     {
         $path = '';
         foreach ($this->mo_etracker__view->getTreePath() as $category) {
-            $path .= \oxRegistry::get('mo_etracker__main')->getCategoryEntry($category, $this->mo_etracker__view);
+            $path .= \oxRegistry::get('main')->getCategoryEntry($category, $this->mo_etracker__view);
         }
         return $path;
     }
@@ -262,7 +262,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         }
         $path = '';
         foreach ($tree as $category) {
-            $path .= \oxRegistry::get('mo_etracker__main')->getCategoryEntry($category, $this->mo_etracker__view);
+            $path .= \oxRegistry::get('main')->getCategoryEntry($category, $this->mo_etracker__view);
         }
         return $path;
     }
@@ -314,7 +314,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function mo_etracker__getViewInformation()
     {
-        $main = \oxRegistry::get('mo_etracker__main');
+        $main = \oxRegistry::get('main');
         $output = '';
 
         //class-name & function
@@ -344,7 +344,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     public function mo_etracker__getEventCalls()
     {
         $calls = [];
-        foreach (\oxRegistry::get('mo_etracker__main')->takeEvents() as $event) {
+        foreach (\oxRegistry::get('main')->takeEvents() as $event) {
             $calls[] = array_merge([$event->getEventName()], $event->getParameters());
         }
         return $calls;

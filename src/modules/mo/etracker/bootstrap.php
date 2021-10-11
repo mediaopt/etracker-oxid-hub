@@ -8,7 +8,7 @@ spl_autoload_register(function($class) {
     }
 });
 spl_autoload_register(function ($class) {
-    if($class === 'mo_etracker__event') {
+    if($class === 'event') {
         require_once OX_BASE_PATH . 'modules/mo/etracker/classes/mo_etracker__event.php';
     }
 });

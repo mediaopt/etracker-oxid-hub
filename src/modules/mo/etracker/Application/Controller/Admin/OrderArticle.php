@@ -12,7 +12,7 @@
  * @package Mediaopt\Etracker
  * @extend Order_Article
  */
-class mo_etracker__order_article extends mo_etracker__order_article_parent
+class orderArticle extends mo_etracker__order_article_parent
 {
 
     /**
@@ -35,13 +35,13 @@ class mo_etracker__order_article extends mo_etracker__order_article_parent
         if ($orderArticle->oxorderarticles__oxstorno->value != 1) {
             $order = \oxNew('oxOrder');
             $order->load($orderArticle->oxorderarticles__oxorderid->value);
-            $event = \oxNew('mo_etracker__orderPartiallyCanceledEvent', $order, $orderArticle);
+            $event = \oxNew('orderPartiallyCanceledEvent', $order, $orderArticle);
         }
 
         parent::storno();
 
         if (isset($event)) {
-            \oxRegistry::get('mo_etracker__main')->trigger($event);
+            \oxRegistry::get('main')->trigger($event);
         }
     }
 }

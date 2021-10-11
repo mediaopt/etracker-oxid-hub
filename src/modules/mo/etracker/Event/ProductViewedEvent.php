@@ -12,11 +12,11 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class mo_etracker__productViewedEvent implements mo_etracker__event
+class productViewedEvent implements event
 {
 
     /**
-     * @see mo_etracker__converter::fromArticle()
+     * @see converter::fromArticle()
      * @var stdClass
      */
     protected $product = null;
@@ -42,7 +42,7 @@ class mo_etracker__productViewedEvent implements mo_etracker__event
      */
     public function __construct(\oxArticle $article, $basketId = '', $pageName = '')
     {
-        $this->product = \oxRegistry::get('mo_etracker__converter')->fromArticle($article);
+        $this->product = \oxRegistry::get('converter')->fromArticle($article);
         $this->basketId = $basketId;
         $this->pageName = $pageName;
     }
@@ -56,8 +56,8 @@ class mo_etracker__productViewedEvent implements mo_etracker__event
     }
 
     /**
-     * @see mo_etracker__event::getParameters()
      * @return array
+     *@see event::getParameters()
      */
     public function getParameters()
     {

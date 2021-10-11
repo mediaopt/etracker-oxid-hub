@@ -12,7 +12,7 @@
  * @package Mediaopt\Etracker
  * @extend Details
  */
-class mo_etracker__details extends mo_etracker__details_parent
+class articleDetailsController extends mo_etracker__details_parent
 {
 
     /**
@@ -22,11 +22,11 @@ class mo_etracker__details extends mo_etracker__details_parent
     public function render()
     {
         $event = \oxNew(
-            'mo_etracker__productViewedEvent',
+            'productViewedEvent',
             $this->getProduct(),
             \oxRegistry::getSession()->getBasket()->mo_etracker__getBasketId()
         );
-        \oxRegistry::get('mo_etracker__main')->trigger($event);
+        \oxRegistry::get('main')->trigger($event);
         return parent::render();
     }
 }

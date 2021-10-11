@@ -5,25 +5,21 @@
  * @copyright 2016 derksen mediaopt GmbH
  */
 
+
 /**
- * This event contains functionality shared by basketEmptiedEvent and basketFilledEvent.
+ * This event is issued if an order has been completed.
  *
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class mo_etracker__basketEvent
+class orderCompletedEvent implements event
 {
 
     /**
-     * @see mo_etracker__converter::fromArticle
+     * @see converter::fromOrder()
      * @var stdClass
      */
-    protected $product = null;
-
-    /**
-     * @var int
-     */
-    protected $quantity = 0;
+    protected $order;
 
     /**
      * Optional.
@@ -33,28 +29,35 @@ class mo_etracker__basketEvent
     protected $pageName = '';
 
     /**
-     * mo_etracker__basketFilledEvent constructor.
-     * @param oxArticle $article
-     * @param int $amount
+     * @param \oxOrder $order
+     * @param \oxBasket $basket
      * @param string $pageName
      */
-    public function __construct(\oxArticle $article, $amount, $pageName = '')
+    public function __construct(\oxOrder $order, \oxBasket $basket, $pageName = '')
     {
-        $this->product = \oxRegistry::get('mo_etracker__converter')->fromArticle($article);
-        $this->quantity = $amount;
+        $this->order = \oxRegistry::get('converter')->fromOrder($order, $basket);
         $this->pageName = $pageName;
     }
 
     /**
+     * @return string
+     */
+    public function getEventName()
+    {
+        return 'order';
+    }
+
+    /**
      * @return array
+     *@see event::getParameters()
      */
     public function getParameters()
     {
-        $parameters = [$this->product, $this->quantity];
+        $parameters = [$this->order];
         if (!empty($this->pageName)) {
             $parameters[] = $this->pageName;
         }
         return $parameters;
     }
-
+    
 }

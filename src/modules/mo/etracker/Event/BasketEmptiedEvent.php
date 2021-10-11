@@ -6,12 +6,12 @@
  */
 
 /**
- * This event is issued if an item has been added to the noticelist.
+ * This event is issued if an item is removed from the basket.
  *
  * @version ${VERSION}, ${REVISION}
- * @package Mediaopt\Etracker\Event
+ * @package Mediaopt\Etracker
  */
-class mo_etracker__noticelistFilledEvent extends mo_etracker__basketEvent implements mo_etracker__event
+class basketEmptiedEvent extends basketEvent implements event
 {
 
     /**
@@ -19,7 +19,7 @@ class mo_etracker__noticelistFilledEvent extends mo_etracker__basketEvent implem
      */
     public function getEventName()
     {
-        return 'insertToWatchlist';
+        return 'removeFromBasket';
     }
 
 }

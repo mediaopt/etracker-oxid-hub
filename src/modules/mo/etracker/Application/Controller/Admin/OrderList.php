@@ -12,7 +12,7 @@
  * @package Mediaopt\Etracker
  * @extend
  */
-class mo_etracker__order_list extends mo_etracker__order_list_parent
+class orderList extends mo_etracker__order_list_parent
 {
 
     /**

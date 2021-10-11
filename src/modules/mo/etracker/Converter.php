@@ -11,7 +11,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class mo_etracker__converter
+class converter
 {
 
     /**
@@ -213,10 +213,10 @@ class mo_etracker__converter
     /**
      * Returns the vouchers (as basket item) used in the supplied basket.
      *
-     * @param mo_etracker__oxbasket $basket
+     * @param basket $basket
      * @return stdClass[]
      */
-    protected function getVouchers(\mo_etracker__oxbasket $basket)
+    protected function getVouchers(\basket $basket)
     {
         $products = [];
         foreach ($basket->getVouchers() as $voucherObject) {
@@ -239,10 +239,10 @@ class mo_etracker__converter
     /**
      * Returns the discounts (as basket item) of the supplied basket.
      *
-     * @param mo_etracker__oxbasket $basket
+     * @param basket $basket
      * @return stdClass[]
      */
-    protected function getDiscountsFromBasket(\mo_etracker__oxbasket $basket)
+    protected function getDiscountsFromBasket(\basket $basket)
     {
         $products = [];
         foreach ((array)$basket->getDiscounts() as $discount) {
@@ -263,11 +263,11 @@ class mo_etracker__converter
     /**
      * Returns the discounts (as basket item) of the supplied basket item.
      *
-     * @param mo_etracker__oxbasket $basket
+     * @param basket $basket
      * @param oxBasketItem $basketItem
      * @return stdClass[]
      */
-    protected function getDiscountsFromBasketItem(\mo_etracker__oxbasket $basket, \oxBasketItem $basketItem)
+    protected function getDiscountsFromBasketItem(\basket $basket, \oxBasketItem $basketItem)
     {
         $initialPrice = $basketItem->getArticle()->getPrice();
         $previousPrice = $initialPrice->getPrice();
@@ -297,10 +297,10 @@ class mo_etracker__converter
     /**
      * Returns the items of a basket.
      *
-     * @param mo_etracker__oxbasket $basket
+     * @param basket $basket
      * @return stdClass[]
      */
-    protected function getBasketItems(\mo_etracker__oxbasket $basket)
+    protected function getBasketItems(\basket $basket)
     {
         $products = [];
         foreach ($basket->getContents() as $basketItem) {
@@ -324,10 +324,10 @@ class mo_etracker__converter
     }
 
     /**
-     * @param \mo_etracker__oxbasket $basket
+     * @param \basket $basket
      * @return stdClass
      */
-    public function fromBasket(\mo_etracker__oxbasket $basket)
+    public function fromBasket(\basket $basket)
     {
         $etrackerBasket = new stdClass();
         $etrackerBasket->id = $basket->mo_etracker__getBasketId();
@@ -397,10 +397,10 @@ class mo_etracker__converter
     /**
      * Returns the product id of each basket item that is wrapped.
      *
-     * @param mo_etracker__oxbasket $basket
+     * @param basket $basket
      * @return string[]
      */
-    protected function getWrappedProductIds(\mo_etracker__oxbasket $basket)
+    protected function getWrappedProductIds(\basket $basket)
     {
         $productIds = [];
         foreach ($basket->getContents() as $basketItem) {
@@ -435,10 +435,10 @@ class mo_etracker__converter
      * It also considers the length of the coupon codes. If comma-separated list of the coupon codes exceeds 50,
      * then a sublist of coupon codes with at most 50 characters is returned.
      *
-     * @param \mo_etracker__oxbasket $basket
+     * @param \basket $basket
      * @return string
      */
-    protected function getCouponCodes(\mo_etracker__oxbasket $basket)
+    protected function getCouponCodes(\basket $basket)
     {
         $couponCodes = implode(
             ',', array_map(
@@ -459,12 +459,12 @@ class mo_etracker__converter
      * Enriches the order with optional information.
      *
      * @param oxOrder $order
-     * @param mo_etracker__oxbasket $basket
+     * @param basket $basket
      * @param stdClass $etrackerOrder
      */
     protected function enrichOrderWithOptionalInformation(
         \oxOrder $order,
-        \mo_etracker__oxbasket $basket,
+        \basket  $basket,
         stdClass $etrackerOrder
     ) {
         $etrackerOrder->customerId = $order->getOrderUser()->getId();
@@ -481,10 +481,10 @@ class mo_etracker__converter
 
     /**
      * @param \oxOrder $order
-     * @param \mo_etracker__oxbasket $basket
+     * @param \basket $basket
      * @return stdClass
      */
-    public function fromOrder(\oxOrder $order, \mo_etracker__oxbasket $basket)
+    public function fromOrder(\oxOrder $order, \basket $basket)
     {
         $etrackerOrder = new stdClass();
         $etrackerOrder->orderNumber = (string)$order->oxorder__oxordernr->value;

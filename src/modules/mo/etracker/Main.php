@@ -11,7 +11,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class mo_etracker__main
+class main
 {
 
     /**
@@ -131,8 +131,8 @@ class mo_etracker__main
     /**
      * Returns the triggered events and removes them.
      *
-     * @see mo_etracker__main::$events
-     * @return mo_etracker__event[]
+     * @return event[]
+     *@see main::$events
      */
     public function takeEvents()
     {
@@ -145,10 +145,10 @@ class mo_etracker__main
     }
 
     /**
-     * @param mo_etracker__event $event
+     * @param event $event
      * @return $this
      */
-    public function trigger(mo_etracker__event $event)
+    public function trigger(event $event)
     {
         $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
         $updatedEventQueue = is_array($eventQueue) ? array_merge($eventQueue, [$event]) : [$event];

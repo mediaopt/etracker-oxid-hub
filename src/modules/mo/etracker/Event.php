@@ -9,7 +9,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-interface mo_etracker__event
+interface event
 {
 
     /**

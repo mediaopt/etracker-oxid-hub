@@ -12,7 +12,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class mo_etracker__orderPartiallyCanceledEvent implements mo_etracker__event
+class orderPartiallyCanceledEvent implements event
 {
 
     /**
@@ -21,7 +21,7 @@ class mo_etracker__orderPartiallyCanceledEvent implements mo_etracker__event
     protected $orderNumber = '';
 
     /**
-     * @see mo_etracker__converter::fromBasketItem
+     * @see converter::fromBasketItem
      * @var array
      */
     protected $cancelledProducts = [];
@@ -33,7 +33,7 @@ class mo_etracker__orderPartiallyCanceledEvent implements mo_etracker__event
     public function __construct(\oxOrder $order, \oxOrderArticle $orderArticle)
     {
         $this->orderNumber = $order->oxorder__oxordernr->value;
-        $this->cancelledProducts = [\oxRegistry::get('mo_etracker__converter')->fromOrderArticle($orderArticle)];
+        $this->cancelledProducts = [\oxRegistry::get('converter')->fromOrderArticle($orderArticle)];
     }
 
     /**
@@ -45,8 +45,8 @@ class mo_etracker__orderPartiallyCanceledEvent implements mo_etracker__event
     }
 
     /**
-     * @see mo_etracker__event::getParameters()
      * @return array
+     *@see event::getParameters()
      */
     public function getParameters()
     {
