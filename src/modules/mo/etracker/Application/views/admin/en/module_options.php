@@ -6,7 +6,7 @@ $aLang = [
     'charset' => 'UTF-8',
 
     'tbclcategory_etracker'                 => 'etracker',
-    'categoryController' => 'etracker Category',
+    'MO_ETRACKER__CATEGORY'                 => 'etracker Category',
     'MO_ETRACKER__CATEGORY_HELP'            => 'This identifier will transmitted to etracker instead of the category name.',
     'MO_ETRACKER__SAVE'                     => 'Save',
 
