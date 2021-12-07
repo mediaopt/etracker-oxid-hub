@@ -47,7 +47,7 @@ class Install
             \OxidEsales\EshopCommunity\Internal\Container\ContainerFactory::getInstance()->getContainer()->get(\OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface::class)->create()->getConnection()->executeQuery("ALTER TABLE {$table} ADD COLUMN {$column} {$type};");
             return 1;
         } catch (Exception $ex) {
-            if ($ex->getCode() !== 1060) {
+            if ($ex->getErrorCode() !== 1060) {
                 throw $ex;
             }
             return 0;
