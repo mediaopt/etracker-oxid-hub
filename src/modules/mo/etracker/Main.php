@@ -1,4 +1,10 @@
 <?php
+
+namespace Mediaopt\Etracker;
+
+use OxidEsales\Eshop\Application\Model\Category;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -11,7 +17,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class mo_etracker__main
+class Main
 {
 
     /**
@@ -60,7 +66,7 @@ class mo_etracker__main
     /**
      * get category entry
      *
-     * @param \oxCategory $category
+     * @param Category $category
      * @param mixed $view
      * @return string
      */
@@ -70,7 +76,7 @@ class mo_etracker__main
         $subject = $category->oxcategories__oxtitle->value;
         foreach ($prefixClasses as $className) {
             if (is_a($view, $className)) {
-                $translation = oxRegistry::getLang()->translateString('MOET_PREFIX_' . strtoupper($view->getClassName()));
+                $translation = Registry::getLang()->translateString('MOET_PREFIX_' . strtoupper($view->getClassName()));
                 $subject = $translation . $subject;
                 break;
             }
@@ -93,7 +99,7 @@ class mo_etracker__main
      * escape etracker vars
      *
      * @param array $etrackerVars
-     * @return string
+     * @return array
      */
     public function escapeValues($etrackerVars)
     {
@@ -124,52 +130,34 @@ class mo_etracker__main
     public function translate($identifier)
     {
         $translationKey = 'MOET_' . strtoupper($identifier);
-        $translation = oxRegistry::getLang()->translateString($translationKey);
+        $translation = Registry::getLang()->translateString($translationKey);
         return $translation !== $translationKey ? $translation : $identifier;
     }
 
     /**
      * Returns the triggered events and removes them.
      *
-     * @see mo_etracker__main::$events
-     * @return mo_etracker__event[]
+     * @return Event|array
      */
     public function takeEvents()
     {
-        $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
-        \oxRegistry::getSession()->setVariable(self::EVENT_QUEUE, []);
-        if(!empty($eventQueue)) {
+        $eventQueue = Registry::getSession()->getVariable(self::EVENT_QUEUE);
+        Registry::getSession()->setVariable(self::EVENT_QUEUE, []);
+        if (!empty($eventQueue)) {
             $this->eventsQueued = true;
         }
         return is_array($eventQueue) ? $eventQueue : [];
     }
 
     /**
-     * Returns true iff events have been queued.
-     *
-     * If there are events in the queue, we return true.
-     * If there are no events in the queue because takeEvents was called, we return return.
-     * Otherwise, we return false.
-     *
-     * @return bool
-     */
-    public function hasEvents()
-    {
-        $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
-        $this->eventsQueued |= !empty($eventQueue);
-        return $this->eventsQueued;
-    }
-
-    /**
-     * @param mo_etracker__event $event
+     * @param Event $event
      * @return $this
      */
-    public function trigger(mo_etracker__event $event)
+    public function trigger(Event $event)
     {
-        $eventQueue = \oxRegistry::getSession()->getVariable(self::EVENT_QUEUE);
+        $eventQueue = Registry::getSession()->getVariable(self::EVENT_QUEUE);
         $updatedEventQueue = is_array($eventQueue) ? array_merge($eventQueue, [$event]) : [$event];
-        \oxRegistry::getSession()->setVariable(self::EVENT_QUEUE, $updatedEventQueue);
+        Registry::getSession()->setVariable(self::EVENT_QUEUE, $updatedEventQueue);
         return $this;
     }
-
 }

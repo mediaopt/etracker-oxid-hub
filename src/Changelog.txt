@@ -1,3 +1,12 @@
+== 2.2.0 ==
+* Oxid 6.3 compatibility
+
+== 2.1.10 ==
+* delete unused et_url and et_target
+
+== 2.1.9 ==
+* new script data attribute block-cookies
+
 == 2.1.8 ==
 * module version will be tracked
 

@@ -1,4 +1,13 @@
 <?php
+
+namespace Mediaopt\Etracker\Core;
+
+use Mediaopt\Etracker\Main;
+use OxidEsales\Eshop\Core\Config;
+use OxidEsales\Eshop\Core\Language;
+use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -13,7 +22,7 @@
  * @package Mediaopt\Etracker
  * @extend oxViewConfig
  */
-class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
+class ViewConfig extends ViewConfig_parent
 {
 
     public $mo_etracker__checkOutViews = array('Basket', 'User', 'Payment', 'Order', 'Thankyou');
@@ -37,16 +46,13 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             return $this->mo_etracker__vars;
         }
 
-        $main = \oxRegistry::get('mo_etracker__main');
-        $this->mo_etracker__view = $this->getConfig()->getActiveView();
-        $this->mo_etracker__root = oxRegistry::getConfig()->getConfigParam('mo_etracker__root');
-
+        $main = Registry::get(Main::class);
+        $this->mo_etracker__view = Registry::get(Config::class)->getActiveView();
+        $this->mo_etracker__root = Registry::getConfig()->getConfigParam('mo_etracker__root');
         $etrackerVars = array();
         $etrackerVars['et_pagename'] = $this->mo_etracker__getPageName();
         $etrackerVars['et_areas'] = $this->mo_etracker__getAreas();
-        $etrackerVars['et_url'] = $this->mo_etracker__getUrl();
-        $etrackerVars['et_target'] = $this->mo_etracker__getTarget();
-        $etrackerVars['et_se'] = oxRegistry::getConfig()->getConfigParam('mo_etracker__sechannel');
+        $etrackerVars['et_se'] = Registry::getConfig()->getConfigParam('mo_etracker__sechannel');
         $etrackerVars = $main->escapeValues($etrackerVars);
         $etrackerVars['et_tag'] = 'language=' . $this->mo_etracker__getLanguageAbbr();
 
@@ -63,8 +69,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     {
         $etrackerConfig = [];
         foreach (['securecode', 'securekey', 'sechannel', 'root', 'debug'] as $configurationKey) {
-            $etrackerConfig['mo_etracker__' . $configurationKey] = \oxRegistry::getConfig()
-                ->getConfigParam('mo_etracker__' . $configurationKey);
+            $etrackerConfig['mo_etracker__' . $configurationKey] = Registry::getConfig()->getConfigParam('mo_etracker__' . $configurationKey);
         }
         return $etrackerConfig;
     }
@@ -77,7 +82,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     public function mo_etracker__getNoScriptVars($data)
     {
-        return \oxRegistry::get('mo_etracker__main')->serializeData($data);
+        return Registry::get(Main::class)->serializeData($data);
     }
 
     /**
@@ -92,8 +97,8 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             return '__INDEX__';
         }
 
-        $main = \oxRegistry::get('mo_etracker__main');
-        $uri = $main->processShopUrl($this->getConfig()->getConfigParam('sShopURL')) ?: $_SERVER['REQUEST_URI'];
+        $main = Registry::get(Main::class);
+        $uri = $main->processShopUrl(Registry::get(Config::class)->getConfigParam('sShopURL')) ?: $_SERVER['REQUEST_URI'];
         $pagename = $this->mo_etracker__handlePageName($uri);
 
         //prepend path
@@ -117,14 +122,13 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             return '404';
         }
 
-        $main = \oxRegistry::get('mo_etracker__main');
-
-        if (preg_match('#/([^/]+)?(/|\.html.*)$#', $uri, $matches)) {
+        $main = Registry::get(Main::class);
+        if (preg_match('#/([^/]+)?(/|\\.html.*)$#', $uri, $matches)) {
             //remove special characters
             return $main->escapeCharacters($matches[1]);
         }
 
-        $baseview = $this->getConfig()->getRequestParameter('cl');
+        $baseview = Registry::get(\OxidEsales\Eshop\Core\Request::class)->getRequestParameter('cl');
         if (!empty($baseview) && $baseview !== 'start') {
             //special handling for start-view => empty pagename
             return $main->translate($baseview);
@@ -151,7 +155,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
             $areas .= $path;
 
             //append class name to path
-            $areas .= \oxRegistry::get('mo_etracker__main')->translate($this->getActiveClassName());
+            $areas .= Registry::get(Main::class)->translate($this->getActiveClassName());
             $areas = rtrim($areas, '/') . ',';
 
             //add root as prefix (//)
@@ -161,65 +165,6 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         $areas .= $this->mo_etracker__getViewInformation();
 
         return $areas;
-    }
-
-    /**
-     * rewrite urls if method is post
-     *
-     * @return string
-     */
-    protected function mo_etracker__getUrl()
-    {
-        $prefix = $this->getConfig()->isSsl() ? 'https://' : 'http://';
-
-        if (empty($_POST)) {
-            return $prefix . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        } else {
-            $query = array();
-            if (!empty($_POST['cl'])) {
-                $query['cl'] = $_POST['cl'];
-            }
-            if (!empty($_POST['fnc'])) {
-                $query['fnc'] = $_POST['fnc'];
-            }
-
-            return $prefix . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . http_build_query($query);
-        }
-    }
-
-    /**
-     * build target path
-     *
-     * @return string
-     */
-    protected function mo_etracker__getTarget()
-    {
-        $target = '';
-
-        $checkoutStep = $this->mo_etracker__getCheckoutStep();
-        //checkout-target chain
-        if ($checkoutStep !== false) {
-            $target .= $this->mo_etracker__getRoot(true);
-            $target .= $this->mo_etracker__getCheckoutTargetChain($checkoutStep);
-        }
-        return $target;
-    }
-
-    /**
-     * build target path in checkout-area
-     *
-     * @param $checkoutstep
-     * @return string
-     */
-    protected function mo_etracker__getCheckoutTargetChain($checkoutStep)
-    {
-        $target = '';
-        for ($i = 0; $i <= $checkoutStep; $i++) {
-            //replace target-separator with "-"
-            $target .= \oxRegistry::get('mo_etracker__main')->translate($this->mo_etracker__checkOutViews[$i]) . '/';
-        }
-        $target = rtrim($target, '/');
-        return $target;
     }
 
     /**
@@ -238,70 +183,13 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     }
 
     /**
-     * return product netto prices
-     *
-     * @return float
-     */
-    protected function mo_etracker__getTval()
-    {
-        return $this->basket->getNettoSum();
-    }
-
-    /**
-     * return order-number
-     *
-     * @return string
-     */
-    protected function mo_etracker__getTonr()
-    {
-        return $this->order->oxorder__oxordernr->value;
-    }
-
-    /**
-     * return sale-flag
-     *
-     * @return unknown
-     */
-    protected function mo_etracker__getTsale()
-    {
-        return 1;
-    }
-
-    /**
-     * check if user has ordered sth before
-     *
-     * @return int
-     */
-    protected function mo_etracker__getCust()
-    {
-        $database = oxDb::getDb();
-
-        //try via ID
-        $sql = "SELECT IF(COUNT(oxid) > 1, 1, 0) as isKnownCustomer
-            FROM oxorder
-            WHERE
-            oxuserid = " . $database->quote($this->order->oxorder__oxuserid->value);
-
-        if ($database->getOne($sql)) {
-            return 1;
-        }
-
-        //retry with email
-        $sql = "SELECT IF(COUNT(oxid) > 1, 1, 0) as isKnownCustomer
-              FROM oxorder
-              WHERE
-              oxbillemail = " . $database->quote($this->order->oxorder__oxbillemail->value);
-        return $database->getOne($sql);
-    }
-
-    /**
      * build string containing basketcontent
      *
      * @return string
      */
     protected function mo_etracker__getBasket()
     {
-        return \oxRegistry::get('mo_etracker__main')->buildBasketString($this->basket);
+        return Registry::get(Main::class)->buildBasketString($this->basket);
     }
 
     /**
@@ -310,7 +198,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     public function mo_etracker__isConfigComplete()
     {
-        return (bool)oxRegistry::getConfig()->getConfigParam('mo_etracker__securecode');
+        return (bool)Registry::getConfig()->getConfigParam('mo_etracker__securecode');
     }
 
     /**
@@ -320,8 +208,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function mo_etracker__getPath()
     {
-        $main = \oxRegistry::get('mo_etracker__main');
-
+        $main = Registry::get(Main::class);
         //breadcrumb / category-path
         $path = $this->mo_etracker__processPaths();
 
@@ -362,7 +249,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     {
         $path = '';
         foreach ($this->mo_etracker__view->getTreePath() as $category) {
-            $path .= \oxRegistry::get('mo_etracker__main')->getCategoryEntry($category, $this->mo_etracker__view);
+            $path .= Registry::get(Main::class)->getCategoryEntry($category, $this->mo_etracker__view);
         }
         return $path;
     }
@@ -380,7 +267,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
         }
         $path = '';
         foreach ($tree as $category) {
-            $path .= \oxRegistry::get('mo_etracker__main')->getCategoryEntry($category, $this->mo_etracker__view);
+            $path .= Registry::get(Main::class)->getCategoryEntry($category, $this->mo_etracker__view);
         }
         return $path;
     }
@@ -419,8 +306,8 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
 
     public function mo_etracker__getLanguageAbbr()
     {
-        $lang = $this->getConfig()->getActiveShop()->getLanguage();
-        $oxLang = oxRegistry::get('oxLang');
+        $lang = Registry::get(Config::class)->getActiveShop()->getLanguage();
+        $oxLang = Registry::get(Language::class);
         return $oxLang->getLanguageAbbr($lang);
     }
 
@@ -432,14 +319,14 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function mo_etracker__getViewInformation()
     {
-        $main = \oxRegistry::get('mo_etracker__main');
+        $main = Registry::get(Main::class);
         $output = '';
 
         //class-name & function
         $output .= $main->translate($this->getActiveClassName());
 
         //functions
-        if ($fnc = $this->getConfig()->getRequestParameter('fnc')) {
+        if ($fnc = Registry::getRequest()->getRequestParameter('fnc')) {
             $output .= '/' . $main->translate($fnc);
         }
         return $output;
@@ -450,18 +337,8 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     protected function mo_etracker__is404Call()
     {
-        $myConfig = $this->getConfig();
+        $myConfig = Registry::get(Config::class);
         return get_class($myConfig->getActiveView()) == 'oxUBase';
-    }
-
-    /**
-     * Returns true iff events have been queued.
-     *
-     * @return bool
-     */
-    public function mo_etracker__areEventsQueued()
-    {
-        return \oxRegistry::get('mo_etracker__main')->hasEvents();
     }
 
     /**
@@ -472,7 +349,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
     public function mo_etracker__getEventCalls()
     {
         $calls = [];
-        foreach (\oxRegistry::get('mo_etracker__main')->takeEvents() as $event) {
+        foreach (Registry::get(Main::class)->takeEvents() as $event) {
             $calls[] = array_merge([$event->getEventName()], $event->getParameters());
         }
         return $calls;
@@ -485,7 +362,7 @@ class mo_etracker__oxviewconfig extends mo_etracker__oxviewconfig_parent
      */
     public function mo_etracker__getModuleVersion()
     {
-        $module = \oxNew('oxModule');
+        $module = oxNew(Module::class);
         if (!$module->load(self::MODULENAME)) {
             return '';
         }
