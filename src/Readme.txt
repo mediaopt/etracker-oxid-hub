@@ -2,13 +2,13 @@
 mo_etracker
 
 == Author ==
-derksen mediaopt GmbH
+Mediaopt GmbH
 
 == Prefix ==
 mo
 
 == Version ==
-2.1.7
+2.2.0
 
 == Link ==
 https://www.mediaopt.de
