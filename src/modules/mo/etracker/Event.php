@@ -1,4 +1,7 @@
 <?php
+
+namespace Mediaopt\Etracker;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  */
@@ -9,17 +12,15 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-interface mo_etracker__event
+interface Event
 {
-
     /**
      * @return string
      */
-    public function getEventName();
+    public function getEventName(): string;
 
     /**
      * @return array
      */
-    public function getParameters();
-
+    public function getParameters(): array;
 }

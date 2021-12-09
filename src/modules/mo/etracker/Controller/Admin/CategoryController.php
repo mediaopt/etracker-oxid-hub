@@ -1,4 +1,10 @@
 <?php
+
+namespace Mediaopt\Etracker\Controller\Admin;
+
+use OxidEsales\Eshop\Application\Model\Category;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -11,7 +17,7 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class mo_etracker__category extends \oxAdminDetails
+class CategoryController extends \OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController
 {
 
     /**
@@ -31,20 +37,20 @@ class mo_etracker__category extends \oxAdminDetails
      */
     public function save()
     {
-        $category = \oxNew('oxcategory');
+        $category = oxNew(Category::class);
         $category->load($this->getEditObjectId());
-        $category->assign($this->getConfig()->getRequestParameter('editval'));
+        $category->assign(Registry::getRequest()->getRequestParameter('editval'));
         $category->save();
     }
 
     /**
      * Returns an object and loads it with the id returned by getEditObjectId.
      *
-     * @return \oxCategory
+     * @return Category
      */
     public function mo_etracker__getEditObject()
     {
-        $category = \oxNew('oxcategory');
+        $category = oxNew(Category::class);
         $id = $this->getEditObjectId();
         if (!empty($id) && $id != '-1') {
             $category->load($id);

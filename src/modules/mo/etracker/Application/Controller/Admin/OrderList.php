@@ -1,4 +1,7 @@
 <?php
+
+namespace Mediaopt\Etracker\Application\Controller\Admin;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -12,7 +15,7 @@
  * @package Mediaopt\Etracker
  * @extend
  */
-class mo_etracker__order_list extends mo_etracker__order_list_parent
+class OrderList extends OrderList_parent
 {
 
     /**

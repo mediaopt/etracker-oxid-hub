@@ -1,79 +1,114 @@
 <?php
 
-$sMetadataVersion = '1.1';
+namespace Mediaopt\Etracker;
+
+/**
+ * Metadata version
+ */
+$sMetadataVersion = '2.1';
+
+/**
+ * Module information
+ */
 $aModule = [
-    'id'          => 'mo_etracker',
-    'title'       => 'mediaopt etracker Webcontrolling',
+    'id' => 'moEtracker',
+    'title' => [
+        'de' => 'mo: Etracker',
+        'en' => 'mo: Etracker',
+    ],
     'description' => [
-        'de' => '<p>Erweitern Sie Ihren Shop um etracker Webcontrolling.</p>'
-            . '<p><a href="https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation" target="_blank">Handbuch</a></p>',
-        'en' => '<p>Add etracker features to your OXID shop.</p>'
-            . '<p><a href="https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation" target="_blank">Handbook</a></p>',
+        'de' => '<p>Erweitern Sie Ihren Shop um etracker Webcontrolling.</p><p><a href="https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation" target="_blank">Handbuch</a></p>',
+        'en' => '<p>Add etracker features to your OXID shop.</p><p><a href="https://projects.mediaopt.de/projects/mopt-twk/wiki/Dokumentation" target="_blank">Handbook</a></p>'
     ],
-    'lang'        => 'en',
-    'thumbnail'   => 'logo.png',
-    'version'     => '2.1.10',
-    'author'      => 'derksen mediaopt GmbH',
-    'url'         => 'https://www.mediaopt.de',
-    'email'       => 'support@mediaopt.de',
-    'extend'      => [
-        'oxuserbasket'  => 'mo/etracker/core/mo_etracker__oxuserbasket',
-        'oxorder'       => 'mo/etracker/core/mo_etracker__oxorder',
-        'oxbasket'      => 'mo/etracker/core/mo_etracker__oxbasket',
-        'oxviewconfig'  => 'mo/etracker/core/mo_etracker__oxviewconfig',
-        'details'       => 'mo/etracker/controllers/mo_etracker__details',
-        'order_list'    => 'mo/etracker/controllers/admin/mo_etracker__order_list',
-        'order_article' => 'mo/etracker/controllers/admin/mo_etracker__order_article',
+    'lang' => 'en',
+    'thumbnail' => 'logo.png',
+    'version' => '2.1.10',
+    'author' => 'Mediaopt GmbH',
+    'url' => 'https://www.mediaopt.de',
+    'email' => 'support@mediaopt.de',
+    'extend' => [
+        \OxidEsales\Eshop\Application\Model\UserBasket::class => Application\Model\UserBasket::class,
+        \OxidEsales\Eshop\Application\Model\Order::class => Application\Model\Order::class,
+        \OxidEsales\Eshop\Application\Model\Basket::class => Application\Model\Basket::class,
+        \OxidEsales\Eshop\Core\ViewConfig::class => Core\ViewConfig::class,
+        \OxidEsales\Eshop\Application\Controller\ArticleDetailsController::class => Application\Controller\ArticleDetailsController::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class => Application\Controller\Admin\OrderList::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\OrderArticle::class => Application\Controller\Admin\OrderArticle::class
     ],
-    'files'       => [
-        'mo_etracker__main'                        => 'mo/etracker/classes/mo_etracker__main.php',
-        'mo_etracker__install'                     => 'mo/etracker/classes/mo_etracker__install.php',
-        'mo_etracker__converter'                   => 'mo/etracker/classes/mo_etracker__converter.php',
-        'mo_etracker__event'                       => 'mo/etracker/classes/mo_etracker__event.php',
-        'mo_etracker__basketEvent'                 => 'mo/etracker/classes/events/mo_etracker__basketEvent.php',
-        'mo_etracker__basketEmptiedEvent'          => 'mo/etracker/classes/events/mo_etracker__basketEmptiedEvent.php',
-        'mo_etracker__basketFilledEvent'           => 'mo/etracker/classes/events/mo_etracker__basketFilledEvent.php',
-        'mo_etracker__noticelistEmptiedEvent'      => 'mo/etracker/classes/events/mo_etracker__noticelistEmptiedEvent.php',
-        'mo_etracker__noticelistFilledEvent'       => 'mo/etracker/classes/events/mo_etracker__noticelistFilledEvent.php',
-        'mo_etracker__orderCanceledEvent'          => 'mo/etracker/classes/events/mo_etracker__orderCanceledEvent.php',
-        'mo_etracker__orderCompletedEvent'         => 'mo/etracker/classes/events/mo_etracker__orderCompletedEvent.php',
-        'mo_etracker__orderConfirmedEvent'         => 'mo/etracker/classes/events/mo_etracker__orderConfirmedEvent.php',
-        'mo_etracker__orderPartiallyCanceledEvent' => 'mo/etracker/classes/events/mo_etracker__orderPartiallyCanceledEvent.php',
-        'mo_etracker__productViewedEvent'          => 'mo/etracker/classes/events/mo_etracker__productViewedEvent.php',
-        'mo_etracker__category'                    => 'mo/etracker/controllers/admin/mo_etracker__category.php',
+    'controllers' => [
+        'mo_etracker__main' => \Mediaopt\Etracker\Main::class,
+        'mo_etracker__install' => \Mediaopt\Etracker\Install::class,
+        'mo_etracker__converter' => \Mediaopt\Etracker\Converter::class,
+        'mo_etracker__event' => \Mediaopt\Etracker\Event::class,
+        'mo_etracker__basketEvent' => \Mediaopt\Etracker\Event\BasketEvent::class,
+        'mo_etracker__basketEmptiedEvent' => \Mediaopt\Etracker\Event\BasketEmptiedEvent::class,
+        'mo_etracker__basketFilledEvent' => \Mediaopt\Etracker\Event\BasketFilledEvent::class,
+        'mo_etracker__noticelistEmptiedEvent' => \Mediaopt\Etracker\Event\NoticeListEmptiedEvent::class,
+        'mo_etracker__noticelistFilledEvent' => \Mediaopt\Etracker\Event\NoticeListFilledEvent::class,
+        'mo_etracker__orderCanceledEvent' => \Mediaopt\Etracker\Event\OrderCanceledEvent::class,
+        'mo_etracker__orderCompletedEvent' => \Mediaopt\Etracker\Event\OrderCompletedEvent::class,
+        'mo_etracker__orderConfirmedEvent' => \Mediaopt\Etracker\Event\OrderConfirmedEvent::class,
+        'mo_etracker__orderPartiallyCanceledEvent' => \Mediaopt\Etracker\Event\OrderPartiallyCanceledEvent::class,
+        'mo_etracker__productViewedEvent' => \Mediaopt\Etracker\Event\ProductViewedEvent::class,
+        'mo_etracker__category' => \Mediaopt\Etracker\Controller\Admin\CategoryController::class,
     ],
-    'blocks'      => [
+    'events' => [
+        'onActivate' => '\Mediaopt\Etracker\Install::onActivate',
+        'onDeactivate' => '\Mediaopt\Etracker\Install::onDeactivate',
+    ],
+    'blocks' => [
         [
             'template' => 'layout/footer.tpl',
-            'block'    => 'footer_main',
-            'file'     => 'views/blocks/layout/footer/footer_main.tpl',
+            'block' => 'footer_main',
+            'file' => 'views/blocks/layout/footer/footer_main.tpl'
         ],
         [
             'template' => 'layout/base.tpl',
-            'block'    => 'head_css',
-            'file'     => 'views/blocks/layout/base/head_css.tpl',
+            'block' => 'head_css',
+            'file' => 'views/blocks/layout/base/head_css.tpl'
         ],
         [
             'template' => 'headitem.tpl',
-            'block'    => 'admin_headitem_js',
-            'file'     => 'views/admin/blocks/admin_headitem_js.tpl',
+            'block' => 'admin_headitem_js',
+            'file' => 'views/admin/blocks/admin_headitem_js.tpl'
+        ]
+    ],
+    'settings' => [
+        [
+            'group' => 'mo_etracker__config',
+            'name' => 'mo_etracker__securecode',
+            'type' => 'str',
+            'value' => '',
+        ],
+        [
+            'group' => 'mo_etracker__config',
+            'name' => 'mo_etracker__securekey',
+            'type' => 'str',
+            'value' => '',
+        ],
+        [
+            'group' => 'mo_etracker__config',
+            'name' => 'mo_etracker__sechannel',
+            'type' => 'str',
+            'value' => '',
+        ],
+        [
+            'group' => 'mo_etracker__config',
+            'name' => 'mo_etracker__root',
+            'type' => 'str',
+            'value' => '',
+        ],
+        [
+            'group' => 'mo_etracker__config',
+            'name' => 'mo_etracker__debug',
+            'type' => 'bool',
+            'value' => false,
         ],
     ],
-    'settings'    => [
-        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__securecode', 'type' => 'str', 'value' => ''],
-        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__securekey', 'type' => 'str', 'value' => ''],
-        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__sechannel', 'type' => 'str', 'value' => ''],
-        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__root', 'type' => 'str', 'value' => ''],
-        ['group' => 'mo_etracker__config', 'name' => 'mo_etracker__debug', 'type' => 'bool', 'value' => false],
-    ],
-    'templates'   => [
-        'mo_etracker__eventhandler.tpl'     => 'mo/etracker/views/tpl/eventhandler.tpl',
+    'templates' => [
+        'mo_etracker__eventhandler.tpl' => 'mo/etracker/views/tpl/eventhandler.tpl',
         'mo_etracker__etracker_include.tpl' => 'mo/etracker/views/tpl/etracker_include.tpl',
         'mo_etracker__etracker_vars.tpl' => 'mo/etracker/views/tpl/etracker_vars.tpl',
-        'mo_etracker__category.tpl'         => 'mo/etracker/views/admin/tpl/category.tpl',
-    ],
-    'events'      => [
-        'onActivate'   => 'mo_etracker__install::onActivate',
-        'onDeactivate' => 'mo_etracker__install::onDeactivate',
+        'mo_etracker__category.tpl' => 'mo/etracker/views/admin/tpl/category.tpl'
     ],
 ];

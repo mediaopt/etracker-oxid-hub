@@ -1,4 +1,11 @@
 <?php
+
+namespace Mediaopt\Etracker\Event;
+
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -12,12 +19,11 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker\Event
  */
-class mo_etracker__orderCompletedEvent implements mo_etracker__event
+class OrderCompletedEvent implements \Mediaopt\Etracker\Event
 {
 
     /**
      * @see mo_etracker__converter::fromOrder()
-     * @var stdClass
      */
     protected $order;
 
@@ -29,29 +35,28 @@ class mo_etracker__orderCompletedEvent implements mo_etracker__event
     protected $pageName = '';
 
     /**
-     * @param \oxOrder $order
-     * @param \oxBasket $basket
+     * @param Order $order
+     * @param Basket $basket
      * @param string $pageName
      */
-    public function __construct(\oxOrder $order, \oxBasket $basket, $pageName = '')
+    public function __construct(Order $order, Basket $basket, $pageName = '')
     {
-        $this->order = \oxRegistry::get('mo_etracker__converter')->fromOrder($order, $basket);
+        $this->order = Registry::get(\Mediaopt\Etracker\Converter::class)->fromOrder($order, $basket);
         $this->pageName = $pageName;
     }
 
     /**
      * @return string
      */
-    public function getEventName()
+    public function getEventName(): string
     {
         return 'order';
     }
 
     /**
-     * @see mo_etracker__event::getParameters()
      * @return array
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         $parameters = [$this->order];
         if (!empty($this->pageName)) {
@@ -59,5 +64,5 @@ class mo_etracker__orderCompletedEvent implements mo_etracker__event
         }
         return $parameters;
     }
-    
+
 }

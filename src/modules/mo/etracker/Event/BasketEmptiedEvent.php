@@ -1,4 +1,7 @@
 <?php
+
+namespace Mediaopt\Etracker\Event;
+
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
@@ -11,15 +14,14 @@
  * @version ${VERSION}, ${REVISION}
  * @package Mediaopt\Etracker
  */
-class mo_etracker__basketEmptiedEvent extends mo_etracker__basketEvent implements mo_etracker__event
+class BasketEmptiedEvent extends \Mediaopt\Etracker\Event\BasketEvent implements \Mediaopt\Etracker\Event
 {
 
     /**
      * @return string
      */
-    public function getEventName()
+    public function getEventName(): string
     {
         return 'removeFromBasket';
     }
-
 }
