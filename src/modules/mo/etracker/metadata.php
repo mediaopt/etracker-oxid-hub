@@ -22,7 +22,7 @@ $aModule = [
     ],
     'lang' => 'en',
     'thumbnail' => 'logo.png',
-    'version' => '2.1.10',
+    'version' => '2.2.0',
     'author' => 'Mediaopt GmbH',
     'url' => 'https://www.mediaopt.de',
     'email' => 'support@mediaopt.de',
