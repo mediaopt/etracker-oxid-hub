@@ -53,8 +53,8 @@ $aModule = [
         'mo_etracker__category' => \Mediaopt\Etracker\Controller\Admin\CategoryController::class,
     ],
     'events' => [
-        'onActivate' => '\Mediaopt\Etracker\Install::onActivate',
-        'onDeactivate' => '\Mediaopt\Etracker\Install::onDeactivate',
+        'onActivate' => \Mediaopt\Etracker\Install::class . '::onActivate',
+        'onDeactivate' => \Mediaopt\Etracker\Install::class . '::onDeactivate',
     ],
     'blocks' => [
         [
