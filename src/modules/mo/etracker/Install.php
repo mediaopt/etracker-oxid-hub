@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Core\Registry;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 /**
@@ -23,7 +23,7 @@ class Install
     /**
      * @return string
      */
-    protected static function getBootstrapLoaderStatement()
+    protected static function getBootstrapLoaderStatement(): string
     {
         return 'require_once __DIR__ . \'/mo/etracker/bootstrap.php\'; // This line was automatically generated.';
     }
@@ -41,7 +41,7 @@ class Install
      * @return int
      * @throws Exception
      */
-    protected static function addColumn($table, $column, $type)
+    protected static function addColumn(string $table, string $column, string $type): int
     {
         try {
             \OxidEsales\EshopCommunity\Internal\Container\ContainerFactory::getInstance()->getContainer()->get(\OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface::class)->create()->getConnection()->executeQuery("ALTER TABLE {$table} ADD COLUMN {$column} {$type};");
@@ -71,7 +71,7 @@ class Install
     /**
      * @return string
      */
-    protected static function getFunctionsFile()
+    protected static function getFunctionsFile(): string
     {
         return Registry::getConfig()->getModulesDir() . '/functions.php';
     }
@@ -82,7 +82,7 @@ class Install
      *
      * @return bool
      */
-    public static function isInstallable()
+    public static function isInstallable(): bool
     {
         $issues = [];
 
@@ -144,7 +144,7 @@ class Install
      *
      * @return bool
      */
-    public static function isDeinstallable()
+    public static function isDeinstallable(): bool
     {
         $issues = [];
 

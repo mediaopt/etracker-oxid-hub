@@ -11,7 +11,7 @@ use OxidEsales\Eshop\Core\Registry;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 /**
@@ -47,7 +47,7 @@ class Basket extends Basket_parent
     public function addToBasket($productId, $amount, $selection = null, $persistentParameters = null, $override = false, $bundle = false, $oldBasketItemId = null)
     {
         $itemId = empty($oldBasketItemId) ? $this->getItemKey($productId, $selection, $persistentParameters, $bundle) : $oldBasketItemId;
-        $previousBasketItem = isset($this->_aBasketContents[$itemId]) ? $this->_aBasketContents[$itemId] : null;
+        $previousBasketItem = $this->_aBasketContents[$itemId] ?? null;
         $previousAmount = is_null($previousBasketItem) ? 0 : $previousBasketItem->getAmount();
 
         /** @var BasketItem $basketItem */

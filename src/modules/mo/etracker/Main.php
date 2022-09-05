@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Core\Registry;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 /**
@@ -35,11 +35,11 @@ class Main
     /**
      * prepend path
      *
-     * @param string pagename
-     * @param string path
+     * @param string $pagename
+     * @param string $path
      * @return string
      */
-    public function prependPath($pagename, $path)
+    public function prependPath(string $pagename, string $path): string
     {
         if (!preg_match('#(/|_|^)' . preg_quote($pagename) . '/*$#', $path)) {
             $path .= $pagename;
@@ -53,7 +53,7 @@ class Main
      * @param string $shopUrl
      * @return string
      */
-    public function processShopUrl($shopUrl)
+    public function processShopUrl(string $shopUrl): string
     {
         //cut off prefixes if they are already in shop url (http://myurl.com/shop
         if (preg_match('#^http://[^/]+/(.+)$#', $shopUrl, $matches)) {
@@ -70,7 +70,7 @@ class Main
      * @param mixed $view
      * @return string
      */
-    public function getCategoryEntry($category, $view)
+    public function getCategoryEntry($category, $view): string
     {
         $prefixClasses = ['aList', 'VendorList', 'Tag', 'RecommList', 'ManufacturerList', 'Details'];
         $subject = $category->oxcategories__oxtitle->value;
@@ -90,7 +90,7 @@ class Main
      * @param string $string
      * @return string
      */
-    public function escapeCharacters($string)
+    public function escapeCharacters(string $string): string
     {
         return str_replace(['/', '.', ','], '', $string);
     }
@@ -101,7 +101,7 @@ class Main
      * @param array $etrackerVars
      * @return array
      */
-    public function escapeValues($etrackerVars)
+    public function escapeValues(array $etrackerVars): array
     {
         return array_map('rawurlencode', $etrackerVars);
     }
@@ -112,7 +112,7 @@ class Main
      * @param string $data
      * @return string
      */
-    public function serializeData($data)
+    public function serializeData(string $data): string
     {
         $output = '';
         foreach ($data as $key => $value) {
@@ -127,7 +127,7 @@ class Main
      * @param string $identifier
      * @return string if possible, a translation based on the identifier; otherwise the identifier
      */
-    public function translate($identifier)
+    public function translate(string $identifier): string
     {
         $translationKey = 'MOET_' . strtoupper($identifier);
         $translation = Registry::getLang()->translateString($translationKey);

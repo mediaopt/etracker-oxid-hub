@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Core\Registry;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 
@@ -39,7 +39,7 @@ class OrderCompletedEvent implements \Mediaopt\Etracker\Event
      * @param Basket $basket
      * @param string $pageName
      */
-    public function __construct(Order $order, Basket $basket, $pageName = '')
+    public function __construct(Order $order, Basket $basket, string $pageName = '')
     {
         $this->order = Registry::get(\Mediaopt\Etracker\Converter::class)->fromOrder($order, $basket);
         $this->pageName = $pageName;
@@ -64,5 +64,4 @@ class OrderCompletedEvent implements \Mediaopt\Etracker\Event
         }
         return $parameters;
     }
-
 }

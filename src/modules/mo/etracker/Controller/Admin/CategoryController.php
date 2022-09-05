@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Core\Registry;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 /**
@@ -24,7 +24,7 @@ class CategoryController extends \OxidEsales\Eshop\Application\Controller\Admin\
      * @extend
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         parent::render();
         $this->addTplParam('mo_etracker__include', true);
@@ -34,6 +34,7 @@ class CategoryController extends \OxidEsales\Eshop\Application\Controller\Admin\
     /**
      * @extend save
      * @return mixed
+     * @throws \Exception
      */
     public function save()
     {

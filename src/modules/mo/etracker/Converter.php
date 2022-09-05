@@ -20,7 +20,7 @@ use stdClass;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 /**
@@ -57,7 +57,7 @@ class Converter
      * @param Article $article
      * @return string[]
      */
-    protected function getCategories(Article $article)
+    protected function getCategories(Article $article): array
     {
         $categories = [];
         $etrackerCategories = [];
@@ -92,7 +92,7 @@ class Converter
      * @param Article $product
      * @return string[]
      */
-    protected function extractVariants(Article $product)
+    protected function extractVariants(Article $product): array
     {
         // The | is magic, but this should not pose any problem.
         $names = explode('|', $product->getParentArticle()->oxarticles__oxvarname);
@@ -185,6 +185,8 @@ class Converter
      *
      * @param BasketItem $basketItem
      * @return stdClass
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
     public function fromBasketItem(BasketItem $basketItem)
     {
@@ -284,6 +286,8 @@ class Converter
      * @param Basket $basket
      * @param BasketItem $basketItem
      * @return stdClass[]
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
     protected function getDiscountsFromBasketItem(Basket $basket, BasketItem $basketItem)
     {
@@ -317,6 +321,8 @@ class Converter
      *
      * @param Basket $basket
      * @return stdClass[]
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
     protected function getBasketItems(Basket $basket)
     {
@@ -344,6 +350,8 @@ class Converter
     /**
      * @param Basket $basket
      * @return stdClass
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
     public function fromBasket(Basket $basket)
     {
@@ -355,7 +363,7 @@ class Converter
 
     /**
      * @param Order $order
-     * @return 'lead'|'sale'|'cancellation'|'partial_cancellation'
+     * @return string 'lead'|'sale'|'cancellation'|'partial_cancellation'
      */
     protected function determineOrderStatus(Order $order)
     {
@@ -411,6 +419,8 @@ class Converter
      *
      * @param Basket $basket
      * @return string[]
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
     protected function getWrappedProductIds(Basket $basket)
     {
@@ -468,6 +478,8 @@ class Converter
      * @param Order $order
      * @param Basket $basket
      * @param stdClass $etrackerOrder
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
     protected function enrichOrderWithOptionalInformation(Order $order, Basket $basket, stdClass $etrackerOrder)
     {
@@ -487,6 +499,8 @@ class Converter
      * @param Order $order
      * @param Basket $basket
      * @return stdClass
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
     public function fromOrder(Order $order, Basket $basket)
     {

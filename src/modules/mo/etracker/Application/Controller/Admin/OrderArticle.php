@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Core\Request;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 /**
@@ -26,7 +26,7 @@ class OrderArticle extends OrderArticle_parent
      * @extend
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->addTplParam('mo_etracker__include', true);
         return parent::render();
