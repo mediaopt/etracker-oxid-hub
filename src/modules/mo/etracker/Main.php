@@ -109,10 +109,9 @@ class Main
     /**
      * serialize tracking params
      *
-     * @param string $data
-     * @return string
+     * @param $data
      */
-    public function serializeData(string $data): string
+    public function serializeData($data)
     {
         $output = '';
         foreach ($data as $key => $value) {
