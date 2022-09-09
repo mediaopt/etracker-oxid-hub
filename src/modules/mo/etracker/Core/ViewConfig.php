@@ -38,9 +38,8 @@ class ViewConfig extends ViewConfig_parent
     /**
      * get etracker vars
      *
-     * @return string|null
      */
-    public function mo_etracker__getVars(): ?string
+    public function mo_etracker__getVars()
     {
         if ($this->mo_etracker__vars !== null) {
             return $this->mo_etracker__vars;
@@ -77,10 +76,9 @@ class ViewConfig extends ViewConfig_parent
     /**
      * get noscript vars
      *
-     * @param string $data
-     * @return string
+     * @param $data
      */
-    public function mo_etracker__getNoScriptVars(string $data): string
+    public function mo_etracker__getNoScriptVars($data)
     {
         return Registry::get(Main::class)->serializeData($data);
     }

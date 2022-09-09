@@ -27,15 +27,15 @@ class UserBasket extends UserBasket_parent
     /**
      * @extend
      *
-     * @param string|null $productId Article ID
-     * @param float|null $amount Product amount
-     * @param array|null $selectionList product select lists
-     * @param bool $isOverride if true overrides $dAmount, else sums previous with current it
-     * @param array|null $persistentParams product persistent parameters (default null)
+     * @param $productId Article ID
+     * @param $amount Product amount
+     * @param $selectionList product select lists
+     * @param $isOverride if true overrides $dAmount, else sums previous with current it
+     * @param $persistentParams product persistent parameters (default null)
      *
      * @return int
      */
-    public function addItemToBasket(string $productId = null, float $amount = null, array $selectionList = null, bool $isOverride, array $persistentParams = null): int
+    public function addItemToBasket($productId = null, $amount = null, $selectionList = null, $isOverride, $persistentParams = null)
     {
         if ($this->oxuserbaskets__oxtitle->value !== 'noticelist') {
             return parent::addItemToBasket($productId, $amount, $selectionList, $isOverride, $persistentParams);
