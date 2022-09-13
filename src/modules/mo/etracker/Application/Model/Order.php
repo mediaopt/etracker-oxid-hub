@@ -34,10 +34,10 @@ class Order extends Order_parent
      * @extend
      * @param Basket $basket
      * @param $user
-     * @param bool $recalculatingOrder
-     * @return int
+     * @param $recalculatingOrder
+     * @return mixed
      */
-    public function finalizeOrder(Basket $basket, $user, bool $recalculatingOrder = false): int
+    public function finalizeOrder(Basket $basket, $user, $recalculatingOrder = false)
     {
         $isNewOrder = empty($this->oxorder__oxordernr->value);
         $status = parent::finalizeOrder($basket, $user, $recalculatingOrder);
