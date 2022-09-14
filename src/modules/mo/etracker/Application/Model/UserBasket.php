@@ -29,7 +29,7 @@ class UserBasket extends UserBasket_parent
      *
      * @return
      */
-    public function addItemToBasket($productId = null, $amount = null, $selectionList = null, $isOverride, $persistentParams = null)
+    public function addItemToBasket($productId = null, $amount = null, $selectionList = null, $isOverride = false, $persistentParams = null)
     {
         if ($this->oxuserbaskets__oxtitle->value !== 'noticelist') {
             return parent::addItemToBasket($productId, $amount, $selectionList, $isOverride, $persistentParams);
