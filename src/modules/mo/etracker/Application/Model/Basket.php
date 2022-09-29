@@ -47,7 +47,7 @@ class Basket extends Basket_parent
     public function addToBasket($productId, $amount, $selection = null, $persistentParameters = null, $override = false, $bundle = false, $oldBasketItemId = null)
     {
         $itemId = empty($oldBasketItemId) ? $this->getItemKey($productId, $selection, $persistentParameters, $bundle) : $oldBasketItemId;
-        $previousBasketItem = $this->_aBasketContents[$itemId] ?? null;
+        $previousBasketItem = isset($this->_aBasketContents[$itemId]) ? $this->_aBasketContents[$itemId] : null;
         $previousAmount = is_null($previousBasketItem) ? 0 : $previousBasketItem->getAmount();
 
         /** @var BasketItem $basketItem */
