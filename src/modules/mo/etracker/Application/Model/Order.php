@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Core\Registry;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 /**
@@ -34,14 +34,14 @@ class Order extends Order_parent
      * @extend
      * @param Basket $basket
      * @param $user
-     * @param bool $recalculatingOrder
-     * @return int
+     * @param $recalculatingOrder
+     * @return mixed
      */
     public function finalizeOrder(Basket $basket, $user, $recalculatingOrder = false)
     {
         $isNewOrder = empty($this->oxorder__oxordernr->value);
         $status = parent::finalizeOrder($basket, $user, $recalculatingOrder);
-        if ($status === \OxidEsales\Eshop\Application\Model\Order::ORDER_STATE_OK && $isNewOrder) {
+        if ($status === oxNew(\OxidEsales\Eshop\Application\Model\Order::class)::ORDER_STATE_OK && $isNewOrder) {
             Registry::get(\Mediaopt\Etracker\Main::class)->trigger(oxNew(\Mediaopt\Etracker\Event\OrderCompletedEvent::class, $this, $basket))->trigger(oxNew(\Mediaopt\Etracker\Event\OrderConfirmedEvent::class, $this));
         }
         return $status;

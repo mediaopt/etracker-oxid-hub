@@ -22,4 +22,3 @@ $aLang = [
         'All generated etracker-data will be displayed in a separate area and the JavaScript console. ' .
         'The former functionality requires being logged in as administrator.',
 ];
-
