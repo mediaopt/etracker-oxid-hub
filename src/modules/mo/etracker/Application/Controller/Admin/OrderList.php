@@ -5,7 +5,7 @@ namespace Mediaopt\Etracker\Application\Controller\Admin;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 /**

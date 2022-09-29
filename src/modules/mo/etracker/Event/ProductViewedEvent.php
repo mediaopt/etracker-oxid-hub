@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Core\Registry;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 
@@ -32,21 +32,21 @@ class ProductViewedEvent implements \Mediaopt\Etracker\Event
      *
      * @var string
      */
-    protected $basketId = '';
+    protected string $basketId = '';
 
     /**
      * Optional.
      *
      * @var string
      */
-    protected $pageName = '';
+    protected string $pageName = '';
 
     /**
      * @param Article $article
      * @param string $basketId
      * @param string $pageName
      */
-    public function __construct(Article $article, $basketId = '', $pageName = '')
+    public function __construct(Article $article, string $basketId = '', string $pageName = '')
     {
         $this->product = Registry::get(\Mediaopt\Etracker\Converter::class)->fromArticle($article);
         $this->basketId = $basketId;

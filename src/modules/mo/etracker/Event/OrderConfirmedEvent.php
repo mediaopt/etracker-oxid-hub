@@ -7,7 +7,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 
@@ -23,7 +23,7 @@ class OrderConfirmedEvent implements \Mediaopt\Etracker\Event
     /**
      * @var string
      */
-    protected $orderNumber = '';
+    protected string $orderNumber = '';
 
     /**
      * @param Order $order

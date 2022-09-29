@@ -11,7 +11,7 @@ use OxidEsales\Eshop\Core\Registry;
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2016 derksen mediaopt GmbH
+ * @copyright 2016 Mediaopt GmbH
  */
 
 
@@ -25,7 +25,7 @@ use OxidEsales\Eshop\Core\Registry;
 class ViewConfig extends ViewConfig_parent
 {
 
-    public $mo_etracker__checkOutViews = array('Basket', 'User', 'Payment', 'Order', 'Thankyou');
+    public $mo_etracker__checkOutViews = ['Basket', 'User', 'Payment', 'Order', 'Thankyou'];
     protected $mo_etracker__view;
     protected $mo_etracker__order;
     protected $mo_etracker__basket;
@@ -38,7 +38,6 @@ class ViewConfig extends ViewConfig_parent
     /**
      * get etracker vars
      *
-     * @return array
      */
     public function mo_etracker__getVars()
     {
@@ -65,7 +64,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return array
      */
-    public function mo_etracker__getConfiguration()
+    public function mo_etracker__getConfiguration(): array
     {
         $etrackerConfig = [];
         foreach (['securecode', 'securekey', 'sechannel', 'root', 'debug'] as $configurationKey) {
@@ -77,8 +76,7 @@ class ViewConfig extends ViewConfig_parent
     /**
      * get noscript vars
      *
-     * @param array $data
-     * @return string
+     * @param $data
      */
     public function mo_etracker__getNoScriptVars($data)
     {
@@ -90,7 +88,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    protected function mo_etracker__getPageName()
+    protected function mo_etracker__getPageName(): string
     {
         //special case for index
         if ($this->getActiveClassName() === 'start') {
@@ -142,7 +140,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    protected function mo_etracker__getAreas()
+    protected function mo_etracker__getAreas(): string
     {
         $areas = $this->mo_etracker__getRoot();
         if ($this->mo_etracker__getCheckoutStep() !== false) {
@@ -187,7 +185,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    protected function mo_etracker__getBasket()
+    protected function mo_etracker__getBasket(): string
     {
         return Registry::get(Main::class)->buildBasketString($this->basket);
     }
@@ -195,8 +193,9 @@ class ViewConfig extends ViewConfig_parent
     /**
      * check if all necessary config-parameters are set
      *
+     * @return bool
      */
-    public function mo_etracker__isConfigComplete()
+    public function mo_etracker__isConfigComplete(): bool
     {
         return (bool)Registry::getConfig()->getConfigParam('mo_etracker__securecode');
     }
@@ -206,7 +205,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    protected function mo_etracker__getPath()
+    protected function mo_etracker__getPath(): string
     {
         $main = Registry::get(Main::class);
         //breadcrumb / category-path
@@ -229,7 +228,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    protected function mo_etracker__processPaths()
+    protected function mo_etracker__processPaths(): string
     {
         if (method_exists($this->mo_etracker__view, 'getTreePath')) {
             return $this->mo_etracker__processTreePath();
@@ -245,7 +244,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    protected function mo_etracker__processTreePath()
+    protected function mo_etracker__processTreePath(): string
     {
         $path = '';
         foreach ($this->mo_etracker__view->getTreePath() as $category) {
@@ -259,7 +258,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    protected function mo_etracker__processCatTreePath()
+    protected function mo_etracker__processCatTreePath(): string
     {
         $tree = $this->mo_etracker__view->getCatTreePath();
         if (!$tree) {
@@ -275,9 +274,10 @@ class ViewConfig extends ViewConfig_parent
     /**
      * get root
      *
+     * @param bool $asNode
      * @return string
      */
-    protected function mo_etracker__getRoot($asNode = true)
+    protected function mo_etracker__getRoot(bool $asNode = true): string
     {
         $root = '';
 
@@ -294,7 +294,11 @@ class ViewConfig extends ViewConfig_parent
         return $root;
     }
 
-    protected function mo_etracker__addLanguagPrefix($asNode)
+    /**
+     * @param $asNode
+     * @return string
+     */
+    protected function mo_etracker__addLanguagPrefix($asNode): string
     {
         $prefix = $this->mo_etracker__getLanguageAbbr() . '/';
         if (!$asNode) {
@@ -304,7 +308,10 @@ class ViewConfig extends ViewConfig_parent
         return $prefix;
     }
 
-    public function mo_etracker__getLanguageAbbr()
+    /**
+     * @return int|string
+     */
+    public function mo_etracker__getLanguageAbbr(): int|string
     {
         $lang = Registry::get(Config::class)->getActiveShop()->getLanguage();
         $oxLang = Registry::get(Language::class);
@@ -317,7 +324,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    protected function mo_etracker__getViewInformation()
+    protected function mo_etracker__getViewInformation(): string
     {
         $main = Registry::get(Main::class);
         $output = '';
@@ -335,7 +342,7 @@ class ViewConfig extends ViewConfig_parent
     /**
      * checks whether current call has led to a 404 page
      */
-    protected function mo_etracker__is404Call()
+    protected function mo_etracker__is404Call(): bool
     {
         $myConfig = Registry::get(Config::class);
         return get_class($myConfig->getActiveView()) == 'oxUBase';
@@ -346,7 +353,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return array
      */
-    public function mo_etracker__getEventCalls()
+    public function mo_etracker__getEventCalls(): array
     {
         $calls = [];
         foreach (Registry::get(Main::class)->takeEvents() as $event) {
@@ -360,7 +367,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @return string
      */
-    public function mo_etracker__getModuleVersion()
+    public function mo_etracker__getModuleVersion(): string
     {
         $module = oxNew(Module::class);
         if (!$module->load(self::MODULENAME)) {
